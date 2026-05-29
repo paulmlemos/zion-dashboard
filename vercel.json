@@ -1,1 +1,6 @@
-﻿{"rewrites":[{"source":"/","destination":"/zion-dashboard.html"}]}
+{
+  "cleanUrls": true,
+  "routes": [
+    { "src": "/", "dest": "/zion-dashboard.html" }
+  ]
+}
