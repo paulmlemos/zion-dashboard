@@ -467,6 +467,28 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
 .tm-file-chip a:hover{color:var(--gold);}
 .tm-file-rm{background:none;border:none;color:var(--ink3);cursor:pointer;font-size:14px;line-height:1;padding:0;}
 .tm-file-rm:hover{color:#f87171;}
+.tm-checklist-wrap{background:var(--c3);border:1px solid var(--gold-border);border-radius:8px;padding:4px 14px;min-height:40px;}
+.tm-check-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(201,168,76,.06);}
+.tm-check-item:last-child{border-bottom:none;}
+.tm-check-cb{width:15px;height:15px;accent-color:var(--gold);cursor:pointer;flex-shrink:0;}
+.tm-check-text{flex:1;font-size:13px;color:var(--ink);line-height:1.4;word-break:break-word;}
+.tm-check-text.done{text-decoration:line-through;color:var(--ink3);}
+.tm-check-rm{background:none;border:none;color:var(--ink3);cursor:pointer;font-size:15px;line-height:1;padding:0;flex-shrink:0;}
+.tm-check-rm:hover{color:#f87171;}
+.tm-checklist-add{display:flex;gap:8px;margin-top:10px;align-items:center;}
+.tm-cl-in{flex:1;}
+.tm-cl-add-btn{padding:10px 16px;background:var(--gold-subtle);border:1px solid var(--gold-border);color:var(--gold);border-radius:8px;font-size:18px;line-height:1;cursor:pointer;transition:all .2s;font-weight:300;font-family:var(--sans);}
+.tm-cl-add-btn:hover{background:var(--gold);color:#000;}
+.tm-cl-empty{font-size:12px;color:var(--ink3);padding:10px 0;text-align:center;}
+.task-cl-prog{font-size:11px;}
+.task-dash{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
+.td-card{background:var(--c1);border:1px solid var(--gold-border);border-radius:var(--r);padding:18px 22px;display:flex;align-items:center;gap:14px;transition:background .15s;}
+.td-card:hover{background:rgba(201,168,76,.04);}
+.td-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.td-val{font-family:var(--serif);font-size:28px;font-weight:600;line-height:1;}
+.td-lbl{font-size:10px;color:var(--ink3);letter-spacing:1.5px;text-transform:uppercase;font-weight:600;margin-bottom:3px;}
+.td-sub{font-size:11px;color:var(--ink3);margin-top:3px;}
+@media(max-width:800px){.task-dash{grid-template-columns:repeat(2,1fr);}}
 .tm-btns{display:flex;gap:10px;margin-top:24px;justify-content:flex-end;align-items:center;}
 .tm-btn{padding:10px 22px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:var(--sans);transition:all .2s;}
 .tm-btn.primary{background:var(--gold);color:#000;}
@@ -598,6 +620,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
 
   <!-- TELA 3 — GERENCIADOR DE TAREFAS -->
   <section class="screen" id="screen-tasks">
+    <div id="taskDashboard"></div>
     <div class="tasks-toolbar">
       <button class="task-new-btn" id="taskNewBtn">+ Nova Tarefa</button>
       <div class="divider-v"></div>
@@ -605,7 +628,6 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
       <div class="divider-v"></div>
       <div class="pills" id="taskRespPills"></div>
     </div>
-    <div class="tasks-stats" id="taskStats"></div>
     <div id="tasksList"></div>
   </section>
 
@@ -647,6 +669,14 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
     <div class="tm-field">
       <div class="tm-lbl">Descrição</div>
       <textarea class="tm-in" id="tmTaskDesc" rows="3" placeholder="Detalhes, contexto..."></textarea>
+    </div>
+    <div class="tm-field">
+      <div class="tm-lbl">Checklist</div>
+      <div class="tm-checklist-wrap" id="tmChecklistItems"><div class="tm-cl-empty">Nenhum item — adicione abaixo</div></div>
+      <div class="tm-checklist-add">
+        <input class="tm-in tm-cl-in" type="text" id="tmClInput" placeholder="Adicionar item...">
+        <button class="tm-cl-add-btn" id="tmClAddBtn" title="Adicionar">+</button>
+      </div>
     </div>
     <div class="tm-field">
       <div class="tm-lbl">Anexos</div>
@@ -1125,7 +1155,7 @@ const STATUSES = [
   {id:'andamento', name:'Em andamento', color:'#f59e0b'},
   {id:'concluido', name:'Concluído',    color:'#22c55e'},
 ];
-let tFilterStatus='all', tFilterResp='all', tEditId=null, tModalFiles=[];
+let tFilterStatus='all', tFilterResp='all', tEditId=null, tModalFiles=[], tModalChecklist=[];
 
 function tLoad(){ try{return JSON.parse(localStorage.getItem('zion__tasks')||'[]');}catch(e){return [];} }
 function tSave(a){ localStorage.setItem('zion__tasks',JSON.stringify(a)); }
@@ -1133,11 +1163,41 @@ function escH(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').re
 
 function renderTaskStats(){
   const tasks=tLoad();
-  const el=document.getElementById('taskStats');
-  el.innerHTML=STATUSES.map(s=>{
-    const n=tasks.filter(t=>t.status===s.id).length;
-    return `<div class="ts-chip" style="background:${s.color}18;color:${s.color};border-color:${s.color}44">${n} ${s.name}</div>`;
-  }).join('')+`<div class="ts-chip" style="background:var(--gold-faint);color:var(--gold);border-color:var(--gold-border)">${tasks.length} total</div>`;
+  const today=new Date(); today.setHours(0,0,0,0);
+  const total=tasks.length;
+  const parado=tasks.filter(t=>t.status==='parado').length;
+  const andamento=tasks.filter(t=>t.status==='andamento').length;
+  const concluido=tasks.filter(t=>t.status==='concluido').length;
+  const overdue=tasks.filter(t=>t.status!=='concluido'&&t.dueDate&&new Date(t.dueDate+'T00:00:00')<today).length;
+  const allCl=tasks.flatMap(t=>t.checklist||[]);
+  const clDone=allCl.filter(c=>c.done).length, clTotal=allCl.length;
+  document.getElementById('taskDashboard').innerHTML=`
+    <div class="task-dash">
+      <div class="td-card">
+        <div class="td-icon" style="background:var(--gold-subtle)">📋</div>
+        <div><div class="td-lbl">Total de Tarefas</div><div class="td-val" style="color:var(--gold-l)">${total}</div><div class="td-sub">criadas</div></div>
+      </div>
+      <div class="td-card">
+        <div class="td-icon" style="background:rgba(100,116,139,.12)">⏸</div>
+        <div><div class="td-lbl">Parado</div><div class="td-val" style="color:#64748b">${parado}</div><div class="td-sub">aguardando início</div></div>
+      </div>
+      <div class="td-card">
+        <div class="td-icon" style="background:rgba(245,158,11,.12)">▶</div>
+        <div><div class="td-lbl">Em Andamento</div><div class="td-val" style="color:#f59e0b">${andamento}</div><div class="td-sub">em execução</div></div>
+      </div>
+      <div class="td-card">
+        <div class="td-icon" style="background:rgba(34,197,94,.12)">✓</div>
+        <div><div class="td-lbl">Concluído</div><div class="td-val" style="color:#22c55e">${concluido}</div><div class="td-sub">finalizadas</div></div>
+      </div>
+      <div class="td-card">
+        <div class="td-icon" style="background:rgba(248,113,113,.12)">⚠</div>
+        <div><div class="td-lbl">Em Atraso</div><div class="td-val" style="color:${overdue>0?'#f87171':'var(--ink3)'}">${overdue}</div><div class="td-sub">prazo vencido</div></div>
+      </div>
+      <div class="td-card">
+        <div class="td-icon" style="background:var(--gold-faint)">☑</div>
+        <div><div class="td-lbl">Checklists</div><div class="td-val" style="color:${clTotal&&clDone===clTotal&&clTotal>0?'#22c55e':'var(--gold-l)'}">${clDone}<span style="font-size:16px;color:var(--ink3)">/${clTotal}</span></div><div class="td-sub">itens concluídos</div></div>
+      </div>
+    </div>`;
 }
 
 function renderTaskFilters(){
@@ -1158,17 +1218,19 @@ function renderTaskFilters(){
   rp.querySelectorAll('[data-trf]').forEach(p=>p.addEventListener('click',()=>{tFilterResp=p.dataset.trf;renderTaskFilters();renderTasksList();}));
 }
 
+function tRespArr(t){ const r=t.responsible; return Array.isArray(r)?r:(r?[r]:[]); }
+
 function renderTasksList(){
   const el=document.getElementById('tasksList');
   let tasks=tLoad();
   if(tFilterStatus!=='all') tasks=tasks.filter(t=>t.status===tFilterStatus);
-  if(tFilterResp!=='all') tasks=tasks.filter(t=>t.responsible===tFilterResp);
+  if(tFilterResp!=='all') tasks=tasks.filter(t=>tRespArr(t).includes(tFilterResp));
   tasks=[...tasks].reverse();
   if(!tasks.length){ el.innerHTML=`<div class="tasks-empty">Nenhuma tarefa${tFilterStatus!=='all'||tFilterResp!=='all'?' com estes filtros':''}</div>`; return; }
   const today=new Date(); today.setHours(0,0,0,0);
   el.innerHTML=tasks.map(t=>{
     const st=STATUSES.find(s=>s.id===t.status)||STATUSES[0];
-    const resp=RESPONSIBLES.find(r=>r.id===t.responsible);
+    const respObjs=tRespArr(t).map(id=>RESPONSIBLES.find(r=>r.id===id)).filter(Boolean);
     let dueStr='',dueClass='';
     if(t.dueDate){
       const due=new Date(t.dueDate+'T00:00:00');
@@ -1181,6 +1243,7 @@ function renderTasksList(){
       } else { dueStr=`${due.getDate()} ${MONTHS[due.getMonth()]}`; }
     }
     const fc=(t.files||[]).length;
+    const cl=t.checklist||[], clDone=cl.filter(c=>c.done).length, clTotal=cl.length;
     return `<div class="task-card" style="border-left:3px solid ${st.color}">
       <div class="task-card-inner">
         <div class="task-card-body">
@@ -1188,14 +1251,15 @@ function renderTasksList(){
           ${t.desc?`<div class="task-desc">${escH(t.desc)}</div>`:''}
           <div class="task-card-meta">
             ${dueStr?`<span class="task-due ${dueClass}">📅 ${dueStr}</span>`:''}
+            ${clTotal?`<span class="task-cl-prog" style="color:${clDone===clTotal?'#22c55e':'var(--ink3)'}">☑ ${clDone}/${clTotal}</span>`:''}
             ${fc?`<span class="task-attach-info">📎 ${fc} anexo${fc>1?'s':''}</span>`:''}
           </div>
         </div>
         <div class="task-card-right">
           <div class="task-badges">
             <div class="task-status-badge" style="background:${st.color}22;color:${st.color};border:1px solid ${st.color}44">${st.name}</div>
-            ${resp
-              ?`<div class="task-resp-badge" style="background:${resp.color}1a;color:${resp.color};border:1px solid ${resp.color}33"><div class="task-resp-dot" style="background:${resp.color}"></div>${resp.name}</div>`
+            ${respObjs.length
+              ?respObjs.map(r=>`<div class="task-resp-badge" style="background:${r.color}1a;color:${r.color};border:1px solid ${r.color}33"><div class="task-resp-dot" style="background:${r.color}"></div>${r.name}</div>`).join('')
               :`<div style="font-size:11px;color:var(--ink3)">Sem responsável</div>`}
           </div>
           <div class="task-actions">
@@ -1219,24 +1283,34 @@ function openTaskModal(editId){
   tEditId=editId||null;
   const task=editId?tLoad().find(t=>t.id===editId):null;
   tModalFiles=task?[...(task.files||[])]:[];
+  tModalChecklist=task?(task.checklist||[]).map(c=>({...c})):[];
   document.getElementById('tmHeading').textContent=task?'Editar Tarefa':'Nova Tarefa';
   document.getElementById('tmTaskName').value=task?.title||'';
   document.getElementById('tmTaskDesc').value=task?.desc||'';
   document.getElementById('tmDueDate').value=task?.dueDate||'';
-  tRenderRespPills(task?.responsible||null);
+  tRenderRespPills(tRespArr(task||{}));
   tRenderStatusPills(task?.status||'parado');
   tRenderFileChips();
+  tRenderChecklistItems();
+  document.getElementById('tmClInput').value='';
   document.getElementById('tmDelete').style.display=task?'':'none';
   document.getElementById('tmOverlay').classList.add('open');
 }
 
-function tRenderRespPills(sel){
+function tRenderRespPills(selArr){
+  selArr=Array.isArray(selArr)?[...selArr]:(selArr?[selArr]:[]);
   const el=document.getElementById('tmRespPills');
   el.innerHTML=RESPONSIBLES.map(r=>{
-    const on=r.id===sel;
+    const on=selArr.includes(r.id);
     return `<div class="pill${on?' on':''}" data-tr="${r.id}" style="${on?`background:${r.color};border-color:${r.color};color:#fff`:''}">${r.name}</div>`;
   }).join('');
-  el.querySelectorAll('[data-tr]').forEach(p=>p.addEventListener('click',()=>tRenderRespPills(p.dataset.tr)));
+  el.querySelectorAll('[data-tr]').forEach(p=>p.addEventListener('click',()=>{
+    const id=p.dataset.tr;
+    const cur=[...selArr];
+    const idx=cur.indexOf(id);
+    if(idx===-1) cur.push(id); else cur.splice(idx,1);
+    tRenderRespPills(cur);
+  }));
 }
 
 function tRenderStatusPills(sel){
@@ -1262,20 +1336,53 @@ function tRenderFileChips(){
 function tSaveModal(){
   const title=document.getElementById('tmTaskName').value.trim();
   if(!title){document.getElementById('tmTaskName').focus();return;}
-  const resp=document.getElementById('tmRespPills').querySelector('.pill.on')?.dataset.tr||null;
+  const responsible=Array.from(document.getElementById('tmRespPills').querySelectorAll('.pill.on')).map(p=>p.dataset.tr);
   const status=document.getElementById('tmStatusPills').querySelector('.pill.on')?.dataset.ts||'parado';
   const dueDate=document.getElementById('tmDueDate').value;
   const desc=document.getElementById('tmTaskDesc').value.trim();
   const tasks=tLoad();
   if(tEditId){
     const i=tasks.findIndex(t=>t.id===tEditId);
-    if(i!==-1) tasks[i]={...tasks[i],title,desc,dueDate,responsible:resp,status,files:tModalFiles};
+    if(i!==-1) tasks[i]={...tasks[i],title,desc,dueDate,responsible,status,files:tModalFiles,checklist:tModalChecklist};
   } else {
-    tasks.push({id:Date.now().toString(),title,desc,dueDate,responsible:resp,status,files:tModalFiles,createdAt:new Date().toISOString()});
+    tasks.push({id:Date.now().toString(),title,desc,dueDate,responsible,status,files:tModalFiles,checklist:tModalChecklist,createdAt:new Date().toISOString()});
   }
   tSave(tasks);
   document.getElementById('tmOverlay').classList.remove('open');
   renderTaskStats(); renderTaskFilters(); renderTasksList();
+}
+
+function tRenderChecklistItems(){
+  const el=document.getElementById('tmChecklistItems');
+  if(!tModalChecklist.length){
+    el.innerHTML='<div class="tm-cl-empty">Nenhum item — adicione abaixo</div>';
+    return;
+  }
+  el.innerHTML=tModalChecklist.map((c,i)=>
+    `<div class="tm-check-item">
+      <input type="checkbox" class="tm-check-cb" data-ci="${i}" ${c.done?'checked':''}>
+      <span class="tm-check-text${c.done?' done':''}">${escH(c.text)}</span>
+      <button class="tm-check-rm" data-cri="${i}" title="Remover">×</button>
+    </div>`
+  ).join('');
+  el.querySelectorAll('[data-ci]').forEach(cb=>cb.addEventListener('change',()=>{
+    tModalChecklist[parseInt(cb.dataset.ci)].done=cb.checked;
+    tRenderChecklistItems();
+  }));
+  el.querySelectorAll('[data-cri]').forEach(b=>b.addEventListener('click',()=>{
+    tModalChecklist.splice(parseInt(b.dataset.cri),1);
+    tRenderChecklistItems();
+  }));
+}
+
+function tAddChecklistItem(){
+  const inp=document.getElementById('tmClInput');
+  const text=inp.value.trim();
+  if(!text) return;
+  tModalChecklist.push({id:Date.now().toString(),text,done:false});
+  inp.value='';
+  tRenderChecklistItems();
+  inp.focus();
 }
 
 document.getElementById('taskNewBtn').addEventListener('click',()=>openTaskModal(null));
@@ -1296,6 +1403,8 @@ document.getElementById('tmFileInput').addEventListener('change',e=>{
   });
   e.target.value='';
 });
+document.getElementById('tmClAddBtn').addEventListener('click',tAddChecklistItem);
+document.getElementById('tmClInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();tAddChecklistItem();}});
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape') document.getElementById('tmOverlay').classList.remove('open');
 });
