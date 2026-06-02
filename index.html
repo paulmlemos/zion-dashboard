@@ -386,6 +386,99 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
   .sidebar{position:static;}
   .search-wrap{width:100%;}
 }
+
+/* ── GERENCIADOR DE TAREFAS ── */
+.tasks-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+.task-new-btn{
+  padding:10px 20px;background:var(--gold);color:#000;border:none;
+  border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;
+  font-family:var(--sans);letter-spacing:.5px;transition:background .2s;flex-shrink:0;white-space:nowrap;
+}
+.task-new-btn:hover{background:var(--gold-l);}
+.tasks-stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;}
+.ts-chip{
+  padding:6px 14px;border-radius:20px;font-size:11px;font-weight:600;
+  border:1px solid;letter-spacing:.3px;
+}
+.task-card{
+  background:var(--c1);border:1px solid var(--gold-border);border-radius:var(--r);
+  margin-bottom:10px;overflow:hidden;transition:background .15s;
+}
+.task-card:hover{background:rgba(201,168,76,.04);}
+.task-card-inner{display:flex;align-items:stretch;}
+.task-card-body{flex:1;padding:16px 20px;min-width:0;}
+.task-card-right{
+  padding:16px 20px;display:flex;flex-direction:column;
+  align-items:flex-end;justify-content:space-between;gap:12px;
+  min-width:200px;border-left:1px solid var(--gold-faint);flex-shrink:0;
+}
+.task-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;line-height:1.4;}
+.task-desc{font-size:12px;color:var(--ink3);line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:6px;}
+.task-card-meta{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:4px;}
+.task-due{font-size:11px;color:var(--ink3);}
+.task-due.overdue{color:#f87171;font-weight:600;}
+.task-due.soon{color:#f59e0b;font-weight:600;}
+.task-attach-info{font-size:11px;color:var(--ink3);}
+.task-badges{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+.task-status-badge{
+  display:inline-flex;align-items:center;
+  padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;
+  letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;
+}
+.task-resp-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;
+}
+.task-resp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.task-actions{display:flex;gap:6px;}
+.task-act-btn{
+  background:none;border:1px solid var(--gold-border);color:var(--ink3);
+  border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;
+  font-family:var(--sans);transition:all .2s;line-height:1;
+}
+.task-act-btn:hover{color:var(--gold);border-color:var(--gold);}
+.task-act-btn.del:hover{color:#f87171;border-color:#f87171;}
+.tasks-empty{text-align:center;padding:60px 20px;color:var(--ink3);font-size:13px;}
+
+/* Task Modal */
+.tm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:400;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.tm-overlay.open{display:flex;}
+.tm-box{background:var(--c2);border:1px solid var(--gold-border);border-radius:var(--r);padding:36px;width:560px;max-width:92vw;box-shadow:var(--shadow);max-height:90vh;overflow-y:auto;}
+.tm-ttl{font-family:var(--serif);font-size:20px;color:var(--gold-l);margin-bottom:24px;}
+.tm-field{margin-bottom:18px;}
+.tm-lbl{font-size:10px;color:var(--ink3);letter-spacing:1px;text-transform:uppercase;font-weight:600;margin-bottom:7px;}
+.tm-in{width:100%;background:var(--c3);border:1px solid var(--gold-border);border-radius:8px;padding:11px 14px;font-size:13px;color:var(--ink);outline:none;font-family:var(--sans);transition:border-color .2s;resize:vertical;}
+.tm-in:focus{border-color:var(--gold);}
+.tm-in::placeholder{color:var(--ink3);}
+.tm-attach-lbl{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 14px;background:var(--c3);border:1px solid var(--gold-border);
+  border-radius:8px;font-size:11px;color:var(--ink3);cursor:pointer;transition:all .2s;
+}
+.tm-attach-lbl:hover{color:var(--gold);border-color:var(--gold);}
+.tm-file-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.tm-file-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--c3);border:1px solid var(--gold-border);
+  padding:5px 10px;border-radius:20px;font-size:11px;color:var(--ink3);
+}
+.tm-file-chip a{color:var(--ink3);text-decoration:none;}
+.tm-file-chip a:hover{color:var(--gold);}
+.tm-file-rm{background:none;border:none;color:var(--ink3);cursor:pointer;font-size:14px;line-height:1;padding:0;}
+.tm-file-rm:hover{color:#f87171;}
+.tm-btns{display:flex;gap:10px;margin-top:24px;justify-content:flex-end;align-items:center;}
+.tm-btn{padding:10px 22px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:var(--sans);transition:all .2s;}
+.tm-btn.primary{background:var(--gold);color:#000;}
+.tm-btn.primary:hover{background:var(--gold-l);}
+.tm-btn.danger{background:transparent;border:1px solid rgba(239,68,68,.4);color:#f87171;margin-right:auto;}
+.tm-btn.danger:hover{border-color:#f87171;}
+.tm-btn.secondary{background:transparent;border:1px solid var(--gold-border);color:var(--ink2);}
+.tm-btn.secondary:hover{border-color:var(--gold-border2);}
+@media(max-width:700px){
+  .task-card-inner{flex-direction:column;}
+  .task-card-right{min-width:0;border-left:none;border-top:1px solid var(--gold-faint);flex-direction:row;align-items:center;}
+}
 </style>
 </head>
 <body>
@@ -411,6 +504,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
 <nav class="nav">
   <div class="nav-tab active" data-tab="wps">Wealth Planners</div>
   <div class="nav-tab" data-tab="clients">Gestão de Clientes</div>
+  <div class="nav-tab" data-tab="tasks">Tarefas</div>
 </nav>
 
 <main class="page">
@@ -502,6 +596,19 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
     </div>
   </section>
 
+  <!-- TELA 3 — GERENCIADOR DE TAREFAS -->
+  <section class="screen" id="screen-tasks">
+    <div class="tasks-toolbar">
+      <button class="task-new-btn" id="taskNewBtn">+ Nova Tarefa</button>
+      <div class="divider-v"></div>
+      <div class="pills" id="taskStatusPills"></div>
+      <div class="divider-v"></div>
+      <div class="pills" id="taskRespPills"></div>
+    </div>
+    <div class="tasks-stats" id="taskStats"></div>
+    <div id="tasksList"></div>
+  </section>
+
 </main>
 
 <!-- Settings Modal -->
@@ -525,6 +632,44 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
       <button class="cfg-btn danger" id="cfgClear">Remover URL</button>
       <button class="cfg-btn secondary" id="cfgClose">Cancelar</button>
       <button class="cfg-btn primary" id="cfgSave">Salvar e sincronizar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Task Modal -->
+<div class="tm-overlay" id="tmOverlay">
+  <div class="tm-box">
+    <div class="tm-ttl" id="tmHeading">Nova Tarefa</div>
+    <div class="tm-field">
+      <div class="tm-lbl">Nome da tarefa *</div>
+      <input class="tm-in" type="text" id="tmTaskName" placeholder="Ex: Preparar relatório mensal">
+    </div>
+    <div class="tm-field">
+      <div class="tm-lbl">Descrição</div>
+      <textarea class="tm-in" id="tmTaskDesc" rows="3" placeholder="Detalhes, contexto..."></textarea>
+    </div>
+    <div class="tm-field">
+      <div class="tm-lbl">Anexos</div>
+      <label class="tm-attach-lbl" for="tmFileInput">📎 Adicionar arquivo</label>
+      <input type="file" id="tmFileInput" style="display:none" multiple>
+      <div class="tm-file-list" id="tmFileList"></div>
+    </div>
+    <div class="tm-field">
+      <div class="tm-lbl">Prazo</div>
+      <input class="tm-in" type="date" id="tmDueDate" style="width:auto;">
+    </div>
+    <div class="tm-field">
+      <div class="tm-lbl">Responsável</div>
+      <div class="pills" id="tmRespPills"></div>
+    </div>
+    <div class="tm-field">
+      <div class="tm-lbl">Status</div>
+      <div class="pills" id="tmStatusPills"></div>
+    </div>
+    <div class="tm-btns">
+      <button class="tm-btn danger" id="tmDelete" style="display:none">Remover</button>
+      <button class="tm-btn secondary" id="tmCancel">Cancelar</button>
+      <button class="tm-btn primary" id="tmSave">Salvar</button>
     </div>
   </div>
 </div>
@@ -935,6 +1080,7 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
   document.querySelectorAll('.nav-tab,.screen').forEach(x=>x.classList.remove('active'));
   t.classList.add('active');
   document.getElementById(`screen-${t.dataset.tab}`).classList.add('active');
+  if(t.dataset.tab==='tasks'){ renderTaskStats(); renderTasksList(); }
 }));
 
 document.getElementById('searchIn').addEventListener('input',e=>{searchQ=e.target.value;renderClients();});
@@ -968,7 +1114,196 @@ document.getElementById('cfgClear').addEventListener('click',()=>{
   location.reload();
 });
 
+// ─── GERENCIADOR DE TAREFAS ───────────────────────────────
+const RESPONSIBLES = [
+  {id:'john',   name:'John Lemos',   color:'#3b82f6'},
+  {id:'wagner', name:'Wagner Motta', color:'#8b5cf6'},
+  {id:'jean',   name:'Jean Michael', color:'#14b8a6'},
+];
+const STATUSES = [
+  {id:'parado',    name:'Parado',       color:'#64748b'},
+  {id:'andamento', name:'Em andamento', color:'#f59e0b'},
+  {id:'concluido', name:'Concluído',    color:'#22c55e'},
+];
+let tFilterStatus='all', tFilterResp='all', tEditId=null, tModalFiles=[];
+
+function tLoad(){ try{return JSON.parse(localStorage.getItem('zion__tasks')||'[]');}catch(e){return [];} }
+function tSave(a){ localStorage.setItem('zion__tasks',JSON.stringify(a)); }
+function escH(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderTaskStats(){
+  const tasks=tLoad();
+  const el=document.getElementById('taskStats');
+  el.innerHTML=STATUSES.map(s=>{
+    const n=tasks.filter(t=>t.status===s.id).length;
+    return `<div class="ts-chip" style="background:${s.color}18;color:${s.color};border-color:${s.color}44">${n} ${s.name}</div>`;
+  }).join('')+`<div class="ts-chip" style="background:var(--gold-faint);color:var(--gold);border-color:var(--gold-border)">${tasks.length} total</div>`;
+}
+
+function renderTaskFilters(){
+  const sp=document.getElementById('taskStatusPills');
+  const rp=document.getElementById('taskRespPills');
+  sp.innerHTML=`<div class="pill ${tFilterStatus==='all'?'on':''}" data-tsf="all">Todos</div>`
+    +STATUSES.map(s=>{
+      const on=tFilterStatus===s.id;
+      const tc=on?(s.id==='parado'?'#fff':'#000'):'';
+      return `<div class="pill${on?' on':''}" data-tsf="${s.id}" style="${on?`background:${s.color};border-color:${s.color};color:${tc}`:''}">${s.name}</div>`;
+    }).join('');
+  rp.innerHTML=`<div class="pill ${tFilterResp==='all'?'on':''}" data-trf="all">Todos</div>`
+    +RESPONSIBLES.map(r=>{
+      const on=tFilterResp===r.id;
+      return `<div class="pill${on?' on':''}" data-trf="${r.id}" style="${on?`background:${r.color};border-color:${r.color};color:#fff`:''}">${r.name}</div>`;
+    }).join('');
+  sp.querySelectorAll('[data-tsf]').forEach(p=>p.addEventListener('click',()=>{tFilterStatus=p.dataset.tsf;renderTaskFilters();renderTasksList();}));
+  rp.querySelectorAll('[data-trf]').forEach(p=>p.addEventListener('click',()=>{tFilterResp=p.dataset.trf;renderTaskFilters();renderTasksList();}));
+}
+
+function renderTasksList(){
+  const el=document.getElementById('tasksList');
+  let tasks=tLoad();
+  if(tFilterStatus!=='all') tasks=tasks.filter(t=>t.status===tFilterStatus);
+  if(tFilterResp!=='all') tasks=tasks.filter(t=>t.responsible===tFilterResp);
+  tasks=[...tasks].reverse();
+  if(!tasks.length){ el.innerHTML=`<div class="tasks-empty">Nenhuma tarefa${tFilterStatus!=='all'||tFilterResp!=='all'?' com estes filtros':''}</div>`; return; }
+  const today=new Date(); today.setHours(0,0,0,0);
+  el.innerHTML=tasks.map(t=>{
+    const st=STATUSES.find(s=>s.id===t.status)||STATUSES[0];
+    const resp=RESPONSIBLES.find(r=>r.id===t.responsible);
+    let dueStr='',dueClass='';
+    if(t.dueDate){
+      const due=new Date(t.dueDate+'T00:00:00');
+      const diff=Math.round((due-today)/86400000);
+      if(t.status!=='concluido'){
+        if(diff<0){dueStr=`⚠ ${Math.abs(diff)}d em atraso`;dueClass='overdue';}
+        else if(diff===0){dueStr='Hoje';dueClass='soon';}
+        else if(diff<=3){dueStr=`em ${diff}d`;dueClass='soon';}
+        else{dueStr=`${due.getDate()} ${MONTHS[due.getMonth()]}`;}
+      } else { dueStr=`${due.getDate()} ${MONTHS[due.getMonth()]}`; }
+    }
+    const fc=(t.files||[]).length;
+    return `<div class="task-card" style="border-left:3px solid ${st.color}">
+      <div class="task-card-inner">
+        <div class="task-card-body">
+          <div class="task-title">${escH(t.title)}</div>
+          ${t.desc?`<div class="task-desc">${escH(t.desc)}</div>`:''}
+          <div class="task-card-meta">
+            ${dueStr?`<span class="task-due ${dueClass}">📅 ${dueStr}</span>`:''}
+            ${fc?`<span class="task-attach-info">📎 ${fc} anexo${fc>1?'s':''}</span>`:''}
+          </div>
+        </div>
+        <div class="task-card-right">
+          <div class="task-badges">
+            <div class="task-status-badge" style="background:${st.color}22;color:${st.color};border:1px solid ${st.color}44">${st.name}</div>
+            ${resp
+              ?`<div class="task-resp-badge" style="background:${resp.color}1a;color:${resp.color};border:1px solid ${resp.color}33"><div class="task-resp-dot" style="background:${resp.color}"></div>${resp.name}</div>`
+              :`<div style="font-size:11px;color:var(--ink3)">Sem responsável</div>`}
+          </div>
+          <div class="task-actions">
+            <button class="task-act-btn" data-tid="${t.id}">✏ Editar</button>
+            <button class="task-act-btn del" data-del="${t.id}">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('[data-tid]').forEach(b=>b.addEventListener('click',e=>openTaskModal(e.currentTarget.dataset.tid)));
+  el.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',e=>{
+    if(confirm('Remover esta tarefa?')){
+      tSave(tLoad().filter(t=>t.id!==e.currentTarget.dataset.del));
+      renderTaskStats(); renderTaskFilters(); renderTasksList();
+    }
+  }));
+}
+
+function openTaskModal(editId){
+  tEditId=editId||null;
+  const task=editId?tLoad().find(t=>t.id===editId):null;
+  tModalFiles=task?[...(task.files||[])]:[];
+  document.getElementById('tmHeading').textContent=task?'Editar Tarefa':'Nova Tarefa';
+  document.getElementById('tmTaskName').value=task?.title||'';
+  document.getElementById('tmTaskDesc').value=task?.desc||'';
+  document.getElementById('tmDueDate').value=task?.dueDate||'';
+  tRenderRespPills(task?.responsible||null);
+  tRenderStatusPills(task?.status||'parado');
+  tRenderFileChips();
+  document.getElementById('tmDelete').style.display=task?'':'none';
+  document.getElementById('tmOverlay').classList.add('open');
+}
+
+function tRenderRespPills(sel){
+  const el=document.getElementById('tmRespPills');
+  el.innerHTML=RESPONSIBLES.map(r=>{
+    const on=r.id===sel;
+    return `<div class="pill${on?' on':''}" data-tr="${r.id}" style="${on?`background:${r.color};border-color:${r.color};color:#fff`:''}">${r.name}</div>`;
+  }).join('');
+  el.querySelectorAll('[data-tr]').forEach(p=>p.addEventListener('click',()=>tRenderRespPills(p.dataset.tr)));
+}
+
+function tRenderStatusPills(sel){
+  const el=document.getElementById('tmStatusPills');
+  el.innerHTML=STATUSES.map(s=>{
+    const on=s.id===sel;
+    const tc=on?(s.id==='parado'?'#fff':'#000'):'';
+    return `<div class="pill${on?' on':''}" data-ts="${s.id}" style="${on?`background:${s.color};border-color:${s.color};color:${tc}`:''}">${s.name}</div>`;
+  }).join('');
+  el.querySelectorAll('[data-ts]').forEach(p=>p.addEventListener('click',()=>tRenderStatusPills(p.dataset.ts)));
+}
+
+function tRenderFileChips(){
+  const el=document.getElementById('tmFileList');
+  el.innerHTML=tModalFiles.map((f,i)=>
+    `<div class="tm-file-chip">${f.data?`<a href="${f.data}" download="${escH(f.name)}">📎 ${escH(f.name)}</a>`:`📎 ${escH(f.name)}`}<button class="tm-file-rm" data-fi="${i}" title="Remover">×</button></div>`
+  ).join('');
+  el.querySelectorAll('[data-fi]').forEach(b=>b.addEventListener('click',()=>{
+    tModalFiles.splice(parseInt(b.dataset.fi),1);tRenderFileChips();
+  }));
+}
+
+function tSaveModal(){
+  const title=document.getElementById('tmTaskName').value.trim();
+  if(!title){document.getElementById('tmTaskName').focus();return;}
+  const resp=document.getElementById('tmRespPills').querySelector('.pill.on')?.dataset.tr||null;
+  const status=document.getElementById('tmStatusPills').querySelector('.pill.on')?.dataset.ts||'parado';
+  const dueDate=document.getElementById('tmDueDate').value;
+  const desc=document.getElementById('tmTaskDesc').value.trim();
+  const tasks=tLoad();
+  if(tEditId){
+    const i=tasks.findIndex(t=>t.id===tEditId);
+    if(i!==-1) tasks[i]={...tasks[i],title,desc,dueDate,responsible:resp,status,files:tModalFiles};
+  } else {
+    tasks.push({id:Date.now().toString(),title,desc,dueDate,responsible:resp,status,files:tModalFiles,createdAt:new Date().toISOString()});
+  }
+  tSave(tasks);
+  document.getElementById('tmOverlay').classList.remove('open');
+  renderTaskStats(); renderTaskFilters(); renderTasksList();
+}
+
+document.getElementById('taskNewBtn').addEventListener('click',()=>openTaskModal(null));
+document.getElementById('tmCancel').addEventListener('click',()=>document.getElementById('tmOverlay').classList.remove('open'));
+document.getElementById('tmOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('tmOverlay'))document.getElementById('tmOverlay').classList.remove('open');});
+document.getElementById('tmSave').addEventListener('click',tSaveModal);
+document.getElementById('tmDelete').addEventListener('click',()=>{
+  if(!tEditId||!confirm('Remover esta tarefa?')) return;
+  tSave(tLoad().filter(t=>t.id!==tEditId));
+  document.getElementById('tmOverlay').classList.remove('open');
+  renderTaskStats(); renderTaskFilters(); renderTasksList();
+});
+document.getElementById('tmFileInput').addEventListener('change',e=>{
+  Array.from(e.target.files).forEach(file=>{
+    const r=new FileReader();
+    r.onload=ev=>{tModalFiles.push({name:file.name,type:file.type,data:ev.target.result});tRenderFileChips();};
+    r.readAsDataURL(file);
+  });
+  e.target.value='';
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') document.getElementById('tmOverlay').classList.remove('open');
+});
+
 init();
+renderTaskFilters();
+renderTaskStats();
+renderTasksList();
 </script>
 </body>
 </html>
