@@ -400,11 +400,26 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
   padding:6px 14px;border-radius:20px;font-size:11px;font-weight:600;
   border:1px solid;letter-spacing:.3px;
 }
+.task-subtabs{display:flex;gap:0;border-bottom:1px solid var(--gold-border);margin-bottom:28px;}
+.task-subtab{
+  padding:12px 22px;font-size:10px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--ink3);cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;white-space:nowrap;
+}
+.task-subtab:hover{color:var(--ink2);}
+.task-subtab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.task-subtab.active.resp-john{color:#3b82f6;border-bottom-color:#3b82f6;}
+.task-subtab.active.resp-wagner{color:#8b5cf6;border-bottom-color:#8b5cf6;}
+.task-subtab.active.resp-jean{color:#14b8a6;border-bottom-color:#14b8a6;}
+
+.task-dash{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;}
+.task-dash-row2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px;}
+
 .task-card{
   background:var(--c1);border:1px solid var(--gold-border);border-radius:var(--r);
-  margin-bottom:10px;overflow:hidden;transition:background .15s;
+  margin-bottom:10px;overflow:hidden;transition:background .15s;cursor:pointer;
 }
-.task-card:hover{background:rgba(201,168,76,.04);}
+.task-card:hover{background:rgba(201,168,76,.06);border-color:var(--gold-border2);}
 .task-card-inner{display:flex;align-items:stretch;}
 .task-card-body{flex:1;padding:16px 20px;min-width:0;}
 .task-card-right{
@@ -481,7 +496,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
 .tm-cl-add-btn:hover{background:var(--gold);color:#000;}
 .tm-cl-empty{font-size:12px;color:var(--ink3);padding:10px 0;text-align:center;}
 .task-cl-prog{font-size:11px;}
-.task-dash{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
+/* task-dash replaced above */
 .td-card{background:var(--c1);border:1px solid var(--gold-border);border-radius:var(--r);padding:18px 22px;display:flex;align-items:center;gap:14px;transition:background .15s;}
 .td-card:hover{background:rgba(201,168,76,.04);}
 .td-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
@@ -620,6 +635,12 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
 
   <!-- TELA 3 — GERENCIADOR DE TAREFAS -->
   <section class="screen" id="screen-tasks">
+    <div class="task-subtabs" id="taskSubtabs">
+      <div class="task-subtab active" data-view="geral">Geral</div>
+      <div class="task-subtab" data-view="john">John Lemos</div>
+      <div class="task-subtab" data-view="wagner">Wagner Motta</div>
+      <div class="task-subtab" data-view="jean">Jean Michael</div>
+    </div>
     <div id="taskDashboard"></div>
     <div class="tasks-toolbar">
       <button class="task-new-btn" id="taskNewBtn">+ Nova Tarefa</button>
@@ -1156,9 +1177,11 @@ const STATUSES = [
   {id:'concluido', name:'Concluído',    color:'#22c55e'},
 ];
 let tFilterStatus='all', tFilterResp='all', tEditId=null, tModalFiles=[], tModalChecklist=[];
+let tCurrentView='geral';
 
-function tLoad(){ try{return JSON.parse(localStorage.getItem('zion__tasks')||'[]');}catch(e){return [];} }
-function tSave(a){ localStorage.setItem('zion__tasks',JSON.stringify(a)); }
+function tKey(){ return tCurrentView==='geral'?'zion__tasks':`zion__tasks__${tCurrentView}`; }
+function tLoad(){ try{return JSON.parse(localStorage.getItem(tKey())||'[]');}catch(e){return [];} }
+function tSave(a){ localStorage.setItem(tKey(),JSON.stringify(a)); }
 function escH(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function renderTaskStats(){
@@ -1169,17 +1192,11 @@ function renderTaskStats(){
   const andamento=tasks.filter(t=>t.status==='andamento').length;
   const concluido=tasks.filter(t=>t.status==='concluido').length;
   const overdue=tasks.filter(t=>t.status!=='concluido'&&t.dueDate&&new Date(t.dueDate+'T00:00:00')<today).length;
-  const allCl=tasks.flatMap(t=>t.checklist||[]);
-  const clDone=allCl.filter(c=>c.done).length, clTotal=allCl.length;
   document.getElementById('taskDashboard').innerHTML=`
     <div class="task-dash">
       <div class="td-card">
-        <div class="td-icon" style="background:var(--gold-subtle)">📋</div>
-        <div><div class="td-lbl">Total de Tarefas</div><div class="td-val" style="color:var(--gold-l)">${total}</div><div class="td-sub">criadas</div></div>
-      </div>
-      <div class="td-card">
         <div class="td-icon" style="background:rgba(100,116,139,.12)">⏸</div>
-        <div><div class="td-lbl">Parado</div><div class="td-val" style="color:#64748b">${parado}</div><div class="td-sub">aguardando início</div></div>
+        <div><div class="td-lbl">Parado</div><div class="td-val" style="color:#94a3b8">${parado}</div><div class="td-sub">aguardando início</div></div>
       </div>
       <div class="td-card">
         <div class="td-icon" style="background:rgba(245,158,11,.12)">▶</div>
@@ -1189,13 +1206,15 @@ function renderTaskStats(){
         <div class="td-icon" style="background:rgba(34,197,94,.12)">✓</div>
         <div><div class="td-lbl">Concluído</div><div class="td-val" style="color:#22c55e">${concluido}</div><div class="td-sub">finalizadas</div></div>
       </div>
+    </div>
+    <div class="task-dash-row2">
       <div class="td-card">
-        <div class="td-icon" style="background:rgba(248,113,113,.12)">⚠</div>
-        <div><div class="td-lbl">Em Atraso</div><div class="td-val" style="color:${overdue>0?'#f87171':'var(--ink3)'}">${overdue}</div><div class="td-sub">prazo vencido</div></div>
+        <div class="td-icon" style="background:var(--gold-subtle)">📋</div>
+        <div><div class="td-lbl">Total de Tarefas</div><div class="td-val" style="color:var(--gold-l)">${total}</div><div class="td-sub">criadas</div></div>
       </div>
       <div class="td-card">
-        <div class="td-icon" style="background:var(--gold-faint)">☑</div>
-        <div><div class="td-lbl">Checklists</div><div class="td-val" style="color:${clTotal&&clDone===clTotal&&clTotal>0?'#22c55e':'var(--gold-l)'}">${clDone}<span style="font-size:16px;color:var(--ink3)">/${clTotal}</span></div><div class="td-sub">itens concluídos</div></div>
+        <div class="td-icon" style="background:rgba(248,113,113,.12)">⚠</div>
+        <div><div class="td-lbl">Em Atraso</div><div class="td-val" style="color:${overdue>0?'#f87171':'var(--ink3)'}">${overdue}</div><div class="td-sub">${overdue>0?'prazo vencido':'tudo em dia'}</div></div>
       </div>
     </div>`;
 }
@@ -1243,15 +1262,13 @@ function renderTasksList(){
       } else { dueStr=`${due.getDate()} ${MONTHS[due.getMonth()]}`; }
     }
     const fc=(t.files||[]).length;
-    const cl=t.checklist||[], clDone=cl.filter(c=>c.done).length, clTotal=cl.length;
-    return `<div class="task-card" style="border-left:3px solid ${st.color}">
+    return `<div class="task-card" style="border-left:3px solid ${st.color}" data-tid="${t.id}">
       <div class="task-card-inner">
         <div class="task-card-body">
           <div class="task-title">${escH(t.title)}</div>
           ${t.desc?`<div class="task-desc">${escH(t.desc)}</div>`:''}
           <div class="task-card-meta">
             ${dueStr?`<span class="task-due ${dueClass}">📅 ${dueStr}</span>`:''}
-            ${clTotal?`<span class="task-cl-prog" style="color:${clDone===clTotal?'#22c55e':'var(--ink3)'}">☑ ${clDone}/${clTotal}</span>`:''}
             ${fc?`<span class="task-attach-info">📎 ${fc} anexo${fc>1?'s':''}</span>`:''}
           </div>
         </div>
@@ -1263,17 +1280,20 @@ function renderTasksList(){
               :`<div style="font-size:11px;color:var(--ink3)">Sem responsável</div>`}
           </div>
           <div class="task-actions">
-            <button class="task-act-btn" data-tid="${t.id}">✏ Editar</button>
             <button class="task-act-btn del" data-del="${t.id}">✕</button>
           </div>
         </div>
       </div>
     </div>`;
   }).join('');
-  el.querySelectorAll('[data-tid]').forEach(b=>b.addEventListener('click',e=>openTaskModal(e.currentTarget.dataset.tid)));
+  el.querySelectorAll('.task-card').forEach(card=>card.addEventListener('click',e=>{
+    if(e.target.closest('[data-del]')) return;
+    openTaskModal(card.dataset.tid);
+  }));
   el.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',e=>{
+    e.stopPropagation();
     if(confirm('Remover esta tarefa?')){
-      tSave(tLoad().filter(t=>t.id!==e.currentTarget.dataset.del));
+      tSave(tLoad().filter(t=>t.id!==b.dataset.del));
       renderTaskStats(); renderTaskFilters(); renderTasksList();
     }
   }));
@@ -1288,7 +1308,8 @@ function openTaskModal(editId){
   document.getElementById('tmTaskName').value=task?.title||'';
   document.getElementById('tmTaskDesc').value=task?.desc||'';
   document.getElementById('tmDueDate').value=task?.dueDate||'';
-  tRenderRespPills(tRespArr(task||{}));
+  const defaultResp = task ? tRespArr(task) : (tCurrentView!=='geral' ? [tCurrentView] : []);
+  tRenderRespPills(defaultResp);
   tRenderStatusPills(task?.status||'parado');
   tRenderFileChips();
   tRenderChecklistItems();
@@ -1407,6 +1428,21 @@ document.getElementById('tmClAddBtn').addEventListener('click',tAddChecklistItem
 document.getElementById('tmClInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();tAddChecklistItem();}});
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape') document.getElementById('tmOverlay').classList.remove('open');
+});
+
+// ─── SUB-ABAS DE TAREFAS ──────────────────────────────────
+const RESP_CLASS = {john:'resp-john', wagner:'resp-wagner', jean:'resp-jean'};
+document.querySelectorAll('#taskSubtabs [data-view]').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    tCurrentView=tab.dataset.view;
+    document.querySelectorAll('#taskSubtabs [data-view]').forEach(t=>{
+      t.classList.remove('active','resp-john','resp-wagner','resp-jean');
+    });
+    tab.classList.add('active');
+    if(RESP_CLASS[tCurrentView]) tab.classList.add(RESP_CLASS[tCurrentView]);
+    tFilterStatus='all'; tFilterResp='all';
+    renderTaskStats(); renderTaskFilters(); renderTasksList();
+  });
 });
 
 init();
