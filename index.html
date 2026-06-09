@@ -521,6 +521,59 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
 .login-box{background:var(--c2);border:1px solid var(--gold-border);border-radius:var(--r);padding:44px 40px;width:380px;max-width:92vw;box-shadow:0 24px 64px rgba(0,0,0,.7);}
 .login-emblem{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold),var(--gold-l));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:22px;font-weight:700;color:#000;margin:0 auto 18px;box-shadow:0 0 28px rgba(201,168,76,.3);}
 
+/* ── PIPELINE ── */
+.pipe-toolbar{display:flex;flex-direction:column;gap:10px;padding:0 0 20px;}
+.pipe-search{background:var(--c3);border:1px solid var(--gold-border);color:var(--ink);border-radius:8px;padding:9px 14px;font-size:13px;font-family:var(--sans);width:240px;outline:none;}
+.pipe-search::placeholder{color:var(--ink3);}
+.pipe-search:focus{border-color:var(--gold-border2);}
+.pipe-tag-filter{padding:5px 13px;border-radius:20px;font-size:11px;font-family:var(--sans);font-weight:500;cursor:pointer;border:1px solid var(--gold-border);background:transparent;color:var(--ink3);transition:all .18s;letter-spacing:.4px;}
+.pipe-tag-filter.on{background:var(--gold-subtle);border-color:var(--gold);color:var(--gold-l);}
+.pipe-board{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;align-items:flex-start;}
+.pipe-board::-webkit-scrollbar{height:5px;}
+.pipe-board::-webkit-scrollbar-thumb{background:var(--gold-border);border-radius:3px;}
+.pipe-col{flex:0 0 220px;background:var(--c2);border:1px solid rgba(255,255,255,.05);border-radius:12px;display:flex;flex-direction:column;max-height:calc(100vh - 280px);transition:border-color .18s,background .18s;}
+.pipe-col.drag-over{border-color:var(--gold-border2);background:var(--gold-faint);}
+.pipe-col-hdr{padding:14px 14px 10px;border-bottom:1px solid rgba(255,255,255,.05);flex-shrink:0;display:flex;align-items:flex-end;justify-content:space-between;gap:8px;}
+.pipe-col-title{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--ink2);font-family:var(--sans);line-height:1.3;}
+.pipe-col-count{font-size:22px;font-weight:700;font-family:var(--serif);color:var(--gold-l);line-height:1;flex-shrink:0;}
+.pipe-col-body{flex:1;overflow-y:auto;padding:10px 8px 4px;display:flex;flex-direction:column;gap:8px;min-height:60px;}
+.pipe-col-body::-webkit-scrollbar{width:3px;}
+.pipe-col-body::-webkit-scrollbar-thumb{background:var(--gold-border);border-radius:2px;}
+.pipe-col-add{flex-shrink:0;padding:6px 8px 10px;}
+.pipe-add-btn{width:100%;background:none;border:1px dashed var(--gold-border);color:var(--ink3);border-radius:8px;padding:7px;font-size:11px;cursor:pointer;font-family:var(--sans);transition:all .18s;}
+.pipe-add-btn:hover{border-color:var(--gold);color:var(--gold);}
+.pipe-card{background:var(--c3);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:12px;cursor:grab;transition:box-shadow .18s,border-color .18s;position:relative;user-select:none;}
+.pipe-card:hover{border-color:var(--gold-border);box-shadow:0 4px 16px rgba(0,0,0,.4);}
+.pipe-card.dragging{opacity:.35;cursor:grabbing;}
+.pipe-card-prio{position:absolute;top:10px;right:10px;width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px rgba(201,168,76,.6);}
+.pipe-card-name{font-size:13px;font-weight:600;color:var(--ink);font-family:var(--sans);margin-bottom:6px;padding-right:16px;line-height:1.3;}
+.pipe-card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;}
+.pipe-tag{font-size:9px;letter-spacing:.7px;text-transform:uppercase;padding:2px 7px;border-radius:20px;font-family:var(--sans);font-weight:600;}
+.pipe-tag.t0{background:rgba(201,168,76,.15);color:var(--gold);}
+.pipe-tag.t1{background:rgba(59,130,246,.15);color:#60a5fa;}
+.pipe-tag.t2{background:rgba(239,68,68,.15);color:#f87171;}
+.pipe-tag.t3{background:rgba(34,197,94,.15);color:#4ade80;}
+.pipe-tag.t4{background:rgba(168,85,247,.15);color:#c084fc;}
+.pipe-tag.t5{background:rgba(249,115,22,.15);color:#fb923c;}
+.pipe-tag.t6{background:rgba(20,184,166,.15);color:#2dd4bf;}
+.pipe-card-date{font-size:11px;color:var(--gold);background:var(--gold-faint);border:1px solid var(--gold-border);border-radius:6px;padding:3px 8px;display:inline-block;margin-bottom:6px;font-family:var(--sans);}
+.pipe-card-note{font-size:11px;color:var(--ink3);line-height:1.4;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pipe-card-footer{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.pipe-card-wp{font-size:10px;color:var(--ink3);font-family:var(--sans);}
+.pipe-card-age{font-size:10px;color:var(--ink3);font-family:var(--sans);}
+.pipe-card-actions{display:flex;gap:6px;padding-top:8px;border-top:1px solid rgba(255,255,255,.05);}
+.pipe-card-btn{background:none;border:none;cursor:pointer;color:var(--ink3);font-size:11px;padding:3px 8px;border-radius:6px;font-family:var(--sans);transition:color .18s,background .18s;flex:1;text-align:center;}
+.pipe-card-btn:hover{background:var(--gold-faint);color:var(--gold);}
+.pipe-card-btn.del:hover{background:rgba(239,68,68,.1);color:#f87171;}
+.pipe-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:600;display:flex;align-items:center;justify-content:center;}
+.pipe-modal{background:var(--c2);border:1px solid var(--gold-border);border-radius:var(--r);padding:32px 32px 28px;width:460px;max-width:95vw;max-height:90vh;overflow-y:auto;}
+.pipe-modal-ttl{font-family:var(--serif);font-size:20px;color:var(--gold-l);margin-bottom:22px;}
+.pipe-modal-row{margin-bottom:14px;}
+.pipe-modal-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.pipe-modal-tag-btn{padding:5px 13px;border-radius:20px;font-size:11px;font-family:var(--sans);cursor:pointer;border:1px solid var(--gold-border);background:transparent;color:var(--ink3);transition:all .18s;letter-spacing:.4px;}
+.pipe-modal-tag-btn.on{background:var(--gold-subtle);border-color:var(--gold);color:var(--gold-l);}
+.pipe-modal-btns{display:flex;gap:12px;margin-top:22px;}
+
 /* ── CRM SUB-TABS ── */
 .crm-subtabs{display:flex;border-bottom:1px solid var(--gold-border);margin-bottom:32px;}
 .crm-subtab{padding:12px 28px;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;font-family:var(--sans);}
@@ -651,36 +704,26 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
 
     <!-- Sub: Gestão de Clientes -->
     <div id="crm-sub-gestao" class="crm-sub">
-      <div class="toolbar2">
-        <div class="search-wrap">
-          <span class="search-ico">🔍</span>
-          <input type="text" id="searchIn" class="search-in" placeholder="Buscar cliente...">
-        </div>
-        <div class="divider-v"></div>
-        <div class="pills" id="pills"></div>
-      </div>
-      <div class="cl-layout">
-        <div class="tbl-wrap">
-          <table class="tbl">
-            <thead><tr>
-              <th>Cliente</th>
-              <th>Wealth Planner</th>
-              <th>Profissão</th>
-              <th>Entrada</th>
-              <th>Aniversário</th>
-            </tr></thead>
-            <tbody id="tblBody"></tbody>
-          </table>
-        </div>
-        <div class="sidebar">
-          <div class="mini-cal" id="miniCal"></div>
-          <div class="bday-box">
-            <div class="bday-hdr">Próximos Aniversários</div>
-            <div id="bdayList"></div>
+      <div class="pipe-toolbar">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <input class="pipe-search" type="text" id="pipeSearch" placeholder="Buscar cliente..." oninput="pipeSearchQ=this.value;renderPipeline()">
+          <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+            <button class="pipe-tag-filter on" data-tag="" onclick="setTagFilter(this,'')">Todos</button>
+            <button class="pipe-tag-filter" data-tag="Indicação" onclick="setTagFilter(this,'Indicação')">Indicação</button>
+            <button class="pipe-tag-filter" data-tag="VIP" onclick="setTagFilter(this,'VIP')">VIP</button>
+            <button class="pipe-tag-filter" data-tag="Alta Prioridade" onclick="setTagFilter(this,'Alta Prioridade')">Alta Prioridade</button>
+            <button class="pipe-tag-filter" data-tag="Retorno" onclick="setTagFilter(this,'Retorno')">Retorno</button>
+            <button class="pipe-tag-filter" data-tag="Pendência" onclick="setTagFilter(this,'Pendência')">Pendência</button>
+            <button class="pipe-tag-filter" data-tag="Frio" onclick="setTagFilter(this,'Frio')">Frio</button>
+            <button class="pipe-tag-filter" data-tag="Urgente" onclick="setTagFilter(this,'Urgente')">Urgente</button>
           </div>
         </div>
+        <div id="pipeWpRow" style="display:none;gap:6px;flex-wrap:wrap;"></div>
       </div>
+      <div class="pipe-board" id="pipeBoard"></div>
+      <div id="pipeModal" class="pipe-modal-overlay" style="display:none" onclick="if(event.target===this)closePipeModal()"></div>
     </div>
+    <div hidden aria-hidden="true"><div id="miniCal"></div><div id="bdayList"></div><div id="pills"></div><tbody id="tblBody"></tbody></div>
 
   </section>
 
@@ -859,6 +902,267 @@ function applyUserContext() {
     const cfgBtn = document.getElementById('cfgBtn');
     if (cfgBtn) cfgBtn.style.display = 'none';
   }
+}
+
+// ─── PIPELINE CRM ─────────────────────────────────────────
+const PIPELINE_COLS = [
+  {id:'nao-contatado', label:'Ainda não contatados'},
+  {id:'aquecendo',     label:'Aquecendo'},
+  {id:'agendado',      label:'Agendados'},
+  {id:'reuniao1',      label:'1ª Reunião Feita'},
+  {id:'reuniao2',      label:'2ª Reunião Feita'},
+  {id:'formalizacao',  label:'Formalização'},
+  {id:'ativo',         label:'Clientes Ativos'},
+  {id:'acompanhamento',label:'Acompanhamento'},
+  {id:'inativo',       label:'Clientes Inativos'},
+];
+
+const PIPELINE_TAGS = ['Indicação','VIP','Alta Prioridade','Retorno','Pendência','Frio','Urgente'];
+const TAG_COLORS = {'Indicação':'t0','VIP':'t0','Alta Prioridade':'t2','Retorno':'t3','Pendência':'t5','Frio':'t1','Urgente':'t2'};
+
+let pipeData = [];
+let pipeSearchQ = '';
+let pipeTagFilter = '';
+let pipeWpFilter = 'all';
+let dragCardId = null;
+let pipeInited = false;
+
+function pipeLoad() {
+  try { return JSON.parse(localStorage.getItem('zion__pipeline') || 'null'); } catch(e) { return null; }
+}
+function pipeSave() { localStorage.setItem('zion__pipeline', JSON.stringify(pipeData)); }
+function pipeGenId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+
+function initPipeline() {
+  const stored = pipeLoad();
+  if (stored) {
+    pipeData = stored;
+  } else {
+    pipeData = [];
+    WPS.forEach(w => {
+      (clients[w.id] || []).forEach(c => {
+        pipeData.push({
+          id: pipeGenId(), name: c.name, col: 'ativo', wpId: w.id,
+          tags: [], appointmentDate: '', note: '', priority: 'normal',
+          movedAt: new Date().toISOString(), createdAt: new Date().toISOString(),
+        });
+      });
+    });
+    pipeSave();
+  }
+  if (currentUser?.role === 'admin') {
+    const wpRow = document.getElementById('pipeWpRow');
+    if (wpRow && !pipeInited) {
+      wpRow.style.display = 'flex';
+      wpRow.innerHTML = `<button class="pipe-tag-filter on" data-wpf="all" onclick="setWpFilter(this,'all')">Todos WPs</button>`
+        + WPS.map(w => `<button class="pipe-tag-filter" data-wpf="${w.id}" onclick="setWpFilter(this,'${w.id}')">${w.name}</button>`).join('');
+    }
+  }
+  pipeInited = true;
+  renderPipeline();
+}
+
+function pipeVisible() {
+  let cards = [...pipeData];
+  if (currentUser?.role === 'planner') cards = cards.filter(c => c.wpId === currentUser.wpId);
+  else if (pipeWpFilter !== 'all') cards = cards.filter(c => c.wpId === pipeWpFilter);
+  if (pipeSearchQ) cards = cards.filter(c => c.name.toLowerCase().includes(pipeSearchQ.toLowerCase()));
+  if (pipeTagFilter) cards = cards.filter(c => c.tags.includes(pipeTagFilter));
+  return cards;
+}
+
+function pipeCardAge(iso) {
+  const d = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+  return d === 0 ? 'hoje' : d + 'd nesta etapa';
+}
+
+function fmtPipeDate(iso) {
+  if (!iso) return '';
+  const [y,m,d] = iso.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+function renderPipeline() {
+  const board = document.getElementById('pipeBoard');
+  if (!board) return;
+  const visible = pipeVisible();
+  board.innerHTML = PIPELINE_COLS.map(col => {
+    const colCards = visible.filter(c => c.col === col.id);
+    const colTotal = pipeData.filter(c => c.col === col.id &&
+      (currentUser?.role === 'planner' ? c.wpId === currentUser.wpId : true)).length;
+    return `<div class="pipe-col" data-col="${col.id}"
+      ondragover="event.preventDefault();this.classList.add('drag-over')"
+      ondragleave="this.classList.remove('drag-over')"
+      ondrop="onPipeDrop(event,'${col.id}')">
+      <div class="pipe-col-hdr">
+        <div class="pipe-col-title">${col.label}</div>
+        <div class="pipe-col-count">${colTotal}</div>
+      </div>
+      <div class="pipe-col-body">${colCards.map(c => renderPipeCard(c)).join('')}</div>
+      <div class="pipe-col-add">
+        <button class="pipe-add-btn" onclick="openPipeModal(null,'${col.id}')">+ Adicionar</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderPipeCard(c) {
+  const tagsHtml = c.tags.map(t => `<span class="pipe-tag ${TAG_COLORS[t]||'t4'}">${t}</span>`).join('');
+  const wpName = WPS.find(w => w.id === c.wpId)?.name || '';
+  const dateHtml = c.appointmentDate ? `<div class="pipe-card-date">📅 ${fmtPipeDate(c.appointmentDate)}</div>` : '';
+  const prioHtml = c.priority === 'alta' ? `<div class="pipe-card-prio"></div>` : '';
+  const noteHtml = c.note ? `<div class="pipe-card-note">${c.note}</div>` : '';
+  const wpHtml = currentUser?.role === 'admin' ? `<div class="pipe-card-wp">${wpName}</div>` : '<div></div>';
+  return `<div class="pipe-card" id="pcard-${c.id}" draggable="true"
+    ondragstart="onPipeDragStart(event,'${c.id}')" ondragend="onPipeDragEnd()">
+    ${prioHtml}
+    <div class="pipe-card-name">${c.name}</div>
+    ${c.tags.length ? `<div class="pipe-card-tags">${tagsHtml}</div>` : ''}
+    ${dateHtml}${noteHtml}
+    <div class="pipe-card-footer">
+      ${wpHtml}
+      <div class="pipe-card-age">${pipeCardAge(c.movedAt||c.createdAt)}</div>
+    </div>
+    <div class="pipe-card-actions">
+      <button class="pipe-card-btn" onclick="openPipeModal('${c.id}')">✏ Editar</button>
+      <button class="pipe-card-btn del" onclick="deletePipeCard('${c.id}')">✕</button>
+    </div>
+  </div>`;
+}
+
+function onPipeDragStart(e, id) {
+  dragCardId = id;
+  e.dataTransfer.effectAllowed = 'move';
+  setTimeout(() => document.getElementById('pcard-' + id)?.classList.add('dragging'), 0);
+}
+function onPipeDragEnd() {
+  document.querySelectorAll('.pipe-card').forEach(el => el.classList.remove('dragging'));
+  document.querySelectorAll('.pipe-col').forEach(el => el.classList.remove('drag-over'));
+}
+function onPipeDrop(e, colId) {
+  e.preventDefault();
+  document.querySelectorAll('.pipe-col').forEach(el => el.classList.remove('drag-over'));
+  if (!dragCardId) return;
+  const card = pipeData.find(c => c.id === dragCardId);
+  if (card && card.col !== colId) {
+    card.col = colId;
+    card.movedAt = new Date().toISOString();
+    pipeSave();
+    renderPipeline();
+  }
+  dragCardId = null;
+}
+
+function setTagFilter(btn, tag) {
+  pipeTagFilter = tag;
+  document.querySelectorAll('.pipe-tag-filter[data-tag]').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderPipeline();
+}
+function setWpFilter(btn, wp) {
+  pipeWpFilter = wp;
+  document.querySelectorAll('.pipe-tag-filter[data-wpf]').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderPipeline();
+}
+
+// ── MODAL ──
+let editingCardId = null;
+let modalTags = [];
+
+function openPipeModal(cardId, defaultCol) {
+  editingCardId = cardId;
+  const card = cardId ? pipeData.find(c => c.id === cardId) : null;
+  modalTags = card ? [...card.tags] : [];
+  const colOpts = PIPELINE_COLS.map(col =>
+    `<option value="${col.id}" ${(card?.col || defaultCol) === col.id ? 'selected' : ''}>${col.label}</option>`
+  ).join('');
+  const wpOpts = WPS.map(w =>
+    `<option value="${w.id}" ${(card?.wpId || currentUser?.wpId) === w.id ? 'selected' : ''}>${w.name}</option>`
+  ).join('');
+  const wpField = currentUser?.role === 'admin' ? `
+    <div class="pipe-modal-row">
+      <div class="cfg-lbl">Wealth Planner</div>
+      <select class="cfg-in" id="pmWp">${wpOpts}</select>
+    </div>` : '';
+  const tagsHtml = PIPELINE_TAGS.map(t =>
+    `<button type="button" class="pipe-modal-tag-btn ${modalTags.includes(t)?'on':''}" onclick="toggleModalTag('${t}',this)">${t}</button>`
+  ).join('');
+  document.getElementById('pipeModal').innerHTML = `
+    <div class="pipe-modal">
+      <div class="pipe-modal-ttl">${card ? 'Editar Lead' : 'Novo Lead'}</div>
+      <div class="pipe-modal-row">
+        <div class="cfg-lbl">Nome</div>
+        <input class="cfg-in" id="pmName" value="${card?.name || ''}" placeholder="Nome do cliente">
+      </div>
+      <div class="pipe-modal-row">
+        <div class="cfg-lbl">Etapa</div>
+        <select class="cfg-in" id="pmCol">${colOpts}</select>
+      </div>
+      ${wpField}
+      <div class="pipe-modal-row">
+        <div class="cfg-lbl">Data de Agendamento</div>
+        <input class="cfg-in" type="date" id="pmDate" value="${card?.appointmentDate || ''}">
+      </div>
+      <div class="pipe-modal-row">
+        <div class="cfg-lbl">Prioridade</div>
+        <select class="cfg-in" id="pmPrio">
+          <option value="normal" ${card?.priority !== 'alta' ? 'selected' : ''}>Normal</option>
+          <option value="alta" ${card?.priority === 'alta' ? 'selected' : ''}>Alta ●</option>
+        </select>
+      </div>
+      <div class="pipe-modal-row">
+        <div class="cfg-lbl">Tags</div>
+        <div class="pipe-modal-tags">${tagsHtml}</div>
+      </div>
+      <div class="pipe-modal-row">
+        <div class="cfg-lbl">Nota</div>
+        <textarea class="cfg-in" id="pmNote" rows="3" style="resize:vertical;"
+          placeholder="Observações sobre o lead...">${card?.note || ''}</textarea>
+      </div>
+      <div class="pipe-modal-btns">
+        <button class="cfg-btn primary" style="flex:1" onclick="savePipeCard()">Salvar</button>
+        <button class="cfg-btn" onclick="closePipeModal()">Cancelar</button>
+      </div>
+    </div>`;
+  document.getElementById('pipeModal').style.display = 'flex';
+  setTimeout(() => document.getElementById('pmName')?.focus(), 50);
+}
+
+function toggleModalTag(tag, btn) {
+  if (modalTags.includes(tag)) { modalTags = modalTags.filter(t => t !== tag); btn.classList.remove('on'); }
+  else { modalTags.push(tag); btn.classList.add('on'); }
+}
+function closePipeModal() { document.getElementById('pipeModal').style.display = 'none'; }
+
+function savePipeCard() {
+  const name = document.getElementById('pmName').value.trim();
+  if (!name) { document.getElementById('pmName').focus(); return; }
+  const col = document.getElementById('pmCol').value;
+  const wpId = currentUser?.role === 'admin'
+    ? document.getElementById('pmWp').value : currentUser?.wpId || '';
+  const appointmentDate = document.getElementById('pmDate').value;
+  const priority = document.getElementById('pmPrio').value;
+  const note = document.getElementById('pmNote').value.trim();
+  if (editingCardId) {
+    const card = pipeData.find(c => c.id === editingCardId);
+    if (card) {
+      const moved = card.col !== col;
+      Object.assign(card, {name, col, wpId, tags:[...modalTags], appointmentDate, priority, note});
+      if (moved) card.movedAt = new Date().toISOString();
+    }
+  } else {
+    pipeData.push({ id:pipeGenId(), name, col, wpId, tags:[...modalTags],
+      appointmentDate, priority, note,
+      movedAt:new Date().toISOString(), createdAt:new Date().toISOString() });
+  }
+  pipeSave(); closePipeModal(); renderPipeline();
+}
+
+function deletePipeCard(id) {
+  if (!confirm('Remover este lead da pipeline?')) return;
+  pipeData = pipeData.filter(c => c.id !== id);
+  pipeSave(); renderPipeline();
 }
 
 
@@ -1046,8 +1350,8 @@ function parseGASData(data) {
 function renderAll() {
   document.getElementById('loadWrap').style.display='none';
   renderRanking();
-  renderClients(); renderCal(); renderBdays();
   document.getElementById('rankBox').style.display='grid';
+  // Pipeline is initialized lazily when user switches to Gestão tab
 }
 
 function setSyncStatus(live, label) {
@@ -1233,7 +1537,7 @@ function switchCrmSub(sub){
   document.querySelectorAll('.crm-sub').forEach(s=>s.classList.remove('active'));
   document.querySelector(`.crm-subtab[data-sub="${sub}"]`).classList.add('active');
   document.getElementById(`crm-sub-${sub}`).classList.add('active');
-  if(sub==='gestao') renderClients();
+  if(sub==='gestao') initPipeline();
 }
 
 document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>{
