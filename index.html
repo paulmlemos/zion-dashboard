@@ -1029,6 +1029,10 @@ function applyUserContext() {
     filterWp = currentUser.wpId;
     const cfgBtn = document.getElementById('cfgBtn');
     if (cfgBtn) cfgBtn.style.display = 'none';
+    ['gestao-comercial','tasks','marketing','admin'].forEach(tab => {
+      const item = document.querySelector(`.sb-nav-item[data-tab="${tab}"]`);
+      if (item) item.style.display = 'none';
+    });
   }
 }
 
