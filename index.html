@@ -112,7 +112,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
 
 /* ── RANKING ── */
 .rank-section{
-  display:grid;grid-template-columns:3fr 2fr;gap:20px;
+  display:grid;grid-template-columns:1fr;gap:20px;
   margin-bottom:36px;
 }
 .rank-panel{
@@ -1051,17 +1051,6 @@ function renderRanking() {
       <div class="rank-nm">${x.w.name}</div>
       <div class="rank-bar-track"><div class="rank-bar-fill" style="width:${(x.ct/max*100).toFixed(0)}%"></div></div>
       <div class="rank-count">${x.ct}</div>
-    </div>`).join('');
-  const rec=[...sorted].sort((a,b)=>{
-    if(!a.last&&!b.last) return 0; if(!a.last) return 1; if(!b.last) return -1;
-    return b.last-a.last;
-  });
-  document.getElementById('recentList').innerHTML=rec.slice(0,6).map(x=>`
-    <div class="recent-row">
-      <div class="rank-av-sm">${[...x.w.name][0]}</div>
-      <div class="recent-nm">${x.w.name}</div>
-      <div class="recent-date">${x.last?fmtEntry(x.last):'—'}</div>
-      ${x.last?`<div class="recent-ago">${daysBetween(x.last,new Date())}d atrás</div>`:''}
     </div>`).join('');
 }
 
