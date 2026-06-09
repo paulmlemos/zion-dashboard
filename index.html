@@ -620,6 +620,36 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);height:100vh;
 .pipe-modal-tag-btn.on{background:var(--gold-subtle);border-color:var(--gold);color:var(--gold-l);}
 .pipe-modal-btns{display:flex;gap:12px;margin-top:22px;}
 
+/* ── TREINAMENTOS ── */
+.trein-page-hdr{margin-bottom:32px;}
+.trein-page-ttl{font-family:var(--serif);font-size:26px;color:var(--gold-l);margin-bottom:4px;}
+.trein-page-sub{font-size:11px;color:var(--ink3);letter-spacing:2px;text-transform:uppercase;font-weight:500;}
+.trein-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;}
+.trein-card{background:var(--c2);border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden;cursor:pointer;transition:border-color .2s,transform .18s,box-shadow .18s;}
+.trein-card:hover{border-color:var(--gold-border);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.4);}
+.trein-card.active{border-color:var(--gold-border2);}
+.trein-card-top{height:110px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.trein-card-top::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--c3),var(--c4));opacity:1;}
+.trein-num{font-family:var(--serif);font-size:52px;font-weight:700;color:var(--gold);opacity:.25;position:relative;z-index:1;line-height:1;letter-spacing:-2px;}
+.trein-card-accent{position:absolute;bottom:0;left:0;right:0;height:3px;z-index:2;}
+.trein-card-body{padding:18px 20px 20px;}
+.trein-card-title{font-family:var(--serif);font-size:17px;color:var(--ink);margin-bottom:14px;line-height:1.35;}
+.trein-card-footer{display:flex;align-items:center;justify-content:space-between;}
+.trein-lessons-count{font-size:11px;color:var(--ink3);font-family:var(--sans);}
+.trein-card-cta{font-size:11px;color:var(--gold);font-family:var(--sans);font-weight:600;letter-spacing:.5px;}
+.trein-expanded{background:var(--c2);border:1px solid var(--gold-border);border-radius:14px;margin-top:24px;overflow:hidden;}
+.trein-exp-hdr{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.06);}
+.trein-exp-ttl{font-family:var(--serif);font-size:20px;color:var(--gold-l);}
+.trein-exp-close{background:none;border:none;color:var(--ink3);font-size:16px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:color .15s;}
+.trein-exp-close:hover{color:var(--ink);}
+.trein-exp-body{padding:24px;}
+.trein-lesson-item{display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--c3);border-radius:10px;margin-bottom:10px;cursor:pointer;transition:background .15s;}
+.trein-lesson-item:hover{background:var(--c4);}
+.trein-lesson-item:last-child{margin-bottom:0;}
+.trein-lesson-play{width:36px;height:36px;border-radius:50%;background:var(--gold-subtle);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.trein-lesson-title{font-size:13px;font-weight:500;color:var(--ink);font-family:var(--sans);}
+.trein-lesson-dur{font-size:11px;color:var(--ink3);margin-top:2px;}
+
 /* ── CRM SUB-TABS ── */
 .crm-subtabs{display:flex;border-bottom:1px solid var(--gold-border);margin-bottom:32px;}
 .crm-subtab{padding:12px 28px;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;font-family:var(--sans);}
@@ -853,7 +883,12 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);height:100vh;
 
   <!-- TELA: TREINAMENTOS -->
   <section class="screen" id="screen-treinamentos">
-    <div class="empty" style="padding:100px 0;font-size:13px;letter-spacing:1px;">Em breve — conteúdo de Treinamentos</div>
+    <div class="trein-page-hdr">
+      <div class="trein-page-ttl">Treinamentos</div>
+      <div class="trein-page-sub">Módulos de capacitação Zion Private</div>
+    </div>
+    <div class="trein-grid" id="treinGrid"></div>
+    <div id="treinExpanded"></div>
   </section>
 
   <!-- TELA: GESTÃO COMERCIAL -->
@@ -1057,6 +1092,112 @@ let pipeTagFilter = '';
 let pipeWpFilter = 'all';
 let dragCardId = null;
 let pipeInited = false;
+
+/* ── TREINAMENTOS ── */
+const TRAINING_MODULES = [
+  {
+    id:'conheca-zion', num:1,
+    title:'Conheça a Zion',
+    accent:'#C9A84C',
+    lessons:[
+      {title:'História e propósito da Zion', dur:'—'},
+      {title:'Nossa cultura e valores', dur:'—'},
+      {title:'Estrutura e equipe', dur:'—'},
+    ]
+  },
+  {
+    id:'onboarding', num:2,
+    title:'Onboarding',
+    accent:'#3b82f6',
+    lessons:[
+      {title:'Sistemas e ferramentas internas', dur:'—'},
+      {title:'Processos do dia a dia', dur:'—'},
+      {title:'Primeiros passos como WP', dur:'—'},
+    ]
+  },
+  {
+    id:'brochura-comercial', num:3,
+    title:'Brochura Comercial',
+    accent:'#22c55e',
+    lessons:[
+      {title:'Apresentação da brochura', dur:'—'},
+      {title:'Como utilizar em reuniões', dur:'—'},
+    ]
+  },
+  {
+    id:'carta-estrategica', num:4,
+    title:'Carta Estratégica',
+    accent:'#8b5cf6',
+    lessons:[
+      {title:'O que é a carta estratégica', dur:'—'},
+      {title:'Como personalizar para o cliente', dur:'—'},
+    ]
+  },
+  {
+    id:'treinamento-comercial', num:5,
+    title:'Treinamento Comercial',
+    accent:'#ec4899',
+    lessons:[
+      {title:'Técnicas de prospecção', dur:'—'},
+      {title:'Condução de reuniões', dur:'—'},
+      {title:'Fechamento e formalização', dur:'—'},
+      {title:'Gestão da carteira', dur:'—'},
+    ]
+  }
+];
+
+let treinActiveId = null;
+
+function renderTraining() {
+  const grid = document.getElementById('treinGrid');
+  const exp  = document.getElementById('treinExpanded');
+  if (!grid) return;
+  grid.innerHTML = TRAINING_MODULES.map(m => `
+    <div class="trein-card${treinActiveId===m.id?' active':''}" onclick="toggleTrein('${m.id}')">
+      <div class="trein-card-top">
+        <span class="trein-num">${String(m.num).padStart(2,'0')}</span>
+        <div class="trein-card-accent" style="background:${m.accent}"></div>
+      </div>
+      <div class="trein-card-body">
+        <div class="trein-card-title">${m.title}</div>
+        <div class="trein-card-footer">
+          <span class="trein-lessons-count">${m.lessons.length} aula${m.lessons.length>1?'s':''}</span>
+          <span class="trein-card-cta">${treinActiveId===m.id?'Fechar ▲':'Ver aulas ▼'}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  if (treinActiveId) {
+    const m = TRAINING_MODULES.find(x=>x.id===treinActiveId);
+    exp.innerHTML = m ? `
+      <div class="trein-expanded">
+        <div class="trein-exp-hdr">
+          <span class="trein-exp-ttl">${m.title}</span>
+          <button class="trein-exp-close" onclick="toggleTrein('${m.id}')">✕ fechar</button>
+        </div>
+        <div class="trein-exp-body">
+          ${m.lessons.map((l,i)=>`
+            <div class="trein-lesson-item">
+              <div class="trein-lesson-play" style="border-color:${m.accent}40;background:${m.accent}18;">▶</div>
+              <div>
+                <div class="trein-lesson-title">${i+1}. ${l.title}</div>
+                <div class="trein-lesson-dur">${l.dur==='—'?'Em breve':l.dur}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : '';
+  } else {
+    exp.innerHTML = '';
+  }
+}
+
+function toggleTrein(id) {
+  treinActiveId = treinActiveId === id ? null : id;
+  renderTraining();
+}
 
 function pipeLoad() {
   try { return JSON.parse(localStorage.getItem('zion__pipeline') || 'null'); } catch(e) { return null; }
@@ -1731,6 +1872,7 @@ function switchTab(tab) {
   const titleEl = document.getElementById('mhTitle');
   if (titleEl) titleEl.textContent = TAB_LABELS[tab] || tab;
   if (tab==='tasks') { renderTaskFilters(); renderTaskStats(); renderTasksList(); }
+  if (tab==='treinamentos') { renderTraining(); }
   if (tab==='crm') {
     const sub = document.querySelector('.crm-subtab.active')?.dataset.sub;
     if (sub==='gestao') initPipeline();
