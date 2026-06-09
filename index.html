@@ -610,35 +610,6 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
         <div class="ch-brand">ZION | PRIVATE FINANCE</div>
       </div>
 
-      <div class="summary-bar" id="summaryBar">
-        <div class="sum-item">
-          <div class="sum-icon">👥</div>
-          <div>
-            <div class="sum-label">Wealth Planners</div>
-            <div class="sum-val" id="sumWps">12</div>
-            <div class="sum-sub">profissionais ativos</div>
-          </div>
-        </div>
-        <div class="sum-item">
-          <div class="sum-icon">📋</div>
-          <div>
-            <div class="sum-label">Total de Clientes</div>
-            <div class="sum-val" id="sumClients">—</div>
-            <div class="sum-sub">carteiras sob gestão</div>
-          </div>
-        </div>
-        <div class="sum-item">
-          <div class="sum-icon">🏆</div>
-          <div>
-            <div class="sum-label">Top Performer</div>
-            <div class="sum-val" id="sumTop" style="font-size:20px">—</div>
-            <div class="sum-sub" id="sumTopSub">maior carteira</div>
-          </div>
-        </div>
-      </div>
-
-      <div id="wpGrid"></div>
-
       <div class="rank-section" id="rankBox" style="display:none">
         <div class="rank-panel">
           <div class="panel-hdr">
@@ -991,12 +962,7 @@ function parseGASData(data) {
 
 function renderAll() {
   document.getElementById('loadWrap').style.display='none';
-  let total=0; WPS.forEach(w=>total+=(clients[w.id]?.length||0));
-  const top=[...WPS].sort((a,b)=>(clients[b.id]?.length||0)-(clients[a.id]?.length||0))[0];
-  document.getElementById('sumClients').textContent=total;
-  document.getElementById('sumTop').textContent=top?.name||'—';
-  document.getElementById('sumTopSub').textContent=top?`${clients[top.id].length} clientes`:'maior carteira';
-  renderWPs(); renderRanking();
+  renderRanking();
   renderClients(); renderCal(); renderBdays();
   document.getElementById('rankBox').style.display='grid';
 }
