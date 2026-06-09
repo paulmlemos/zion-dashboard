@@ -517,6 +517,10 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
   .task-card-right{min-width:0;border-left:none;border-top:1px solid var(--gold-faint);flex-direction:row;align-items:center;}
 }
 
+/* ── LOGIN ── */
+.login-box{background:var(--c2);border:1px solid var(--gold-border);border-radius:var(--r);padding:44px 40px;width:380px;max-width:92vw;box-shadow:0 24px 64px rgba(0,0,0,.7);}
+.login-emblem{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold),var(--gold-l));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:22px;font-weight:700;color:#000;margin:0 auto 18px;box-shadow:0 0 28px rgba(201,168,76,.3);}
+
 /* ── CRM SUB-TABS ── */
 .crm-subtabs{display:flex;border-bottom:1px solid var(--gold-border);margin-bottom:32px;}
 .crm-subtab{padding:12px 28px;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;font-family:var(--sans);}
@@ -542,6 +546,26 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
 </head>
 <body>
 
+<div id="loginOverlay" style="position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center;">
+  <div class="login-box">
+    <div style="text-align:center;margin-bottom:32px;">
+      <div class="login-emblem">Z</div>
+      <div style="font-family:var(--serif);font-size:22px;color:var(--gold-l);letter-spacing:.5px;">Zion Private Finance</div>
+      <div style="font-size:9px;letter-spacing:4px;color:var(--ink3);margin-top:6px;text-transform:uppercase;font-weight:600;font-family:var(--sans);">Acesso Restrito</div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div class="cfg-lbl">Usuário</div>
+      <input class="cfg-in" type="text" id="loginUser" placeholder="Ex: breno" autocomplete="username" autofocus onkeydown="if(event.key==='Enter')document.getElementById('loginPass').focus()">
+    </div>
+    <div>
+      <div class="cfg-lbl">Senha</div>
+      <input class="cfg-in" type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div id="loginErr" style="color:#f87171;font-size:12px;margin-top:10px;min-height:16px;font-family:var(--sans);"></div>
+    <button class="cfg-btn primary" style="width:100%;margin-top:20px;padding:13px;font-size:13px;letter-spacing:.5px;" onclick="doLogin()">Entrar</button>
+  </div>
+</div>
+
 <header class="hdr">
   <div class="hdr-left">
     <div class="hdr-emblem">Z</div>
@@ -555,6 +579,10 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
       <div class="hdr-date" id="hDate"></div>
       <div class="hdr-time" id="hTime"></div>
       <div class="hdr-sync" id="syncStatus"><span class="sync-dot static" id="syncDot"></span><span id="syncTxt">dados locais</span></div>
+    </div>
+    <div id="hdrUser" style="display:flex;align-items:center;gap:10px;margin-right:6px;display:none;">
+      <span id="hdrUserName" style="font-size:11px;color:var(--ink2);letter-spacing:1px;font-family:var(--sans);text-transform:uppercase;"></span>
+      <button class="hdr-cfg" onclick="doLogout()" title="Sair" style="font-size:12px;">⎋</button>
     </div>
     <button class="hdr-cfg" id="cfgBtn" title="Configurar fonte de dados">⚙</button>
   </div>
@@ -770,6 +798,68 @@ WPS.forEach(w => clients[w.id] = []);
 
 let filterWp = 'all', searchQ = '';
 let calY = new Date().getFullYear(), calM = new Date().getMonth();
+
+// ─── AUTH ─────────────────────────────────────────────────
+const USERS = [
+  {id:'admin',    name:'Administrador', pass:'zion@2025',    role:'admin',   wpId:null},
+  {id:'breno',    name:'Breno',         pass:'breno123',     role:'planner', wpId:'breno'},
+  {id:'edmar',    name:'Edmar',         pass:'edmar123',     role:'planner', wpId:'edmar'},
+  {id:'everton',  name:'Éverton',       pass:'everton123',   role:'planner', wpId:'everton'},
+  {id:'eduardo',  name:'Eduardo',       pass:'eduardo123',   role:'planner', wpId:'eduardo'},
+  {id:'ivan',     name:'Ivan',          pass:'ivan123',      role:'planner', wpId:'ivan'},
+  {id:'jocemar',  name:'Jocemar',       pass:'jocemar123',   role:'planner', wpId:'jocemar'},
+  {id:'peterson', name:'Peterson',      pass:'peterson123',  role:'planner', wpId:'peterson'},
+  {id:'talita',   name:'Talita',        pass:'talita123',    role:'planner', wpId:'talita'},
+  {id:'tiago',    name:'Tiago',         pass:'tiago123',     role:'planner', wpId:'tiago'},
+  {id:'vanessa',  name:'Vanessa',       pass:'vanessa123',   role:'planner', wpId:'vanessa'},
+  {id:'victor',   name:'Victor',        pass:'victor123',    role:'planner', wpId:'victor'},
+  {id:'vinicius', name:'Vinicius',      pass:'vinicius123',  role:'planner', wpId:'vinicius'},
+];
+let currentUser = null;
+
+function checkAuth() {
+  const stored = sessionStorage.getItem('zion__session');
+  if (stored) {
+    try {
+      currentUser = JSON.parse(stored);
+      document.getElementById('loginOverlay').style.display = 'none';
+      applyUserContext();
+      init();
+    } catch(e) { sessionStorage.removeItem('zion__session'); }
+  }
+}
+
+function doLogin() {
+  const u = document.getElementById('loginUser').value.trim().toLowerCase();
+  const p = document.getElementById('loginPass').value;
+  const user = USERS.find(x => x.id === u && x.pass === p);
+  if (!user) {
+    document.getElementById('loginErr').textContent = 'Usuário ou senha incorretos.';
+    return;
+  }
+  currentUser = user;
+  sessionStorage.setItem('zion__session', JSON.stringify(user));
+  document.getElementById('loginOverlay').style.display = 'none';
+  applyUserContext();
+  init();
+  renderTaskFilters(); renderTaskStats(); renderTasksList();
+}
+
+function doLogout() {
+  sessionStorage.removeItem('zion__session');
+  location.reload();
+}
+
+function applyUserContext() {
+  const hdrUser = document.getElementById('hdrUser');
+  hdrUser.style.display = 'flex';
+  document.getElementById('hdrUserName').textContent = currentUser.name;
+  if (currentUser.role === 'planner') {
+    filterWp = currentUser.wpId;
+    const cfgBtn = document.getElementById('cfgBtn');
+    if (cfgBtn) cfgBtn.style.display = 'none';
+  }
+}
 
 
 // ─── DATE ─────────────────────────────────────────────────
@@ -1057,9 +1147,14 @@ function renderRanking() {
 // ─── CLIENTS TABLE ────────────────────────────────────────
 function renderClients() {
   const pills=document.getElementById('pills');
-  pills.innerHTML=`<div class="pill ${filterWp==='all'?'on':''}" data-wp="all">Todos</div>`
-    +WPS.map(w=>`<div class="pill ${filterWp===w.id?'on':''}" data-wp="${w.id}">${w.name} (${clients[w.id]?.length||0})</div>`).join('');
-  pills.querySelectorAll('.pill').forEach(p=>p.addEventListener('click',()=>{filterWp=p.dataset.wp;renderClients();}));
+  if(currentUser?.role==='planner'){
+    filterWp=currentUser.wpId;
+    pills.innerHTML='';
+  } else {
+    pills.innerHTML=`<div class="pill ${filterWp==='all'?'on':''}" data-wp="all">Todos</div>`
+      +WPS.map(w=>`<div class="pill ${filterWp===w.id?'on':''}" data-wp="${w.id}">${w.name} (${clients[w.id]?.length||0})</div>`).join('');
+    pills.querySelectorAll('.pill').forEach(p=>p.addEventListener('click',()=>{filterWp=p.dataset.wp;renderClients();}));
+  }
 
   let all=[]; WPS.forEach(w=>(clients[w.id]||[]).forEach(c=>all.push(c)));
   let fil=filterWp==='all'?all:all.filter(c=>c.wpId===filterWp);
@@ -1088,6 +1183,7 @@ function renderCal() {
   const el=document.getElementById('miniCal');
   const today=new Date();
   let all=[]; WPS.forEach(w=>(clients[w.id]||[]).forEach(c=>all.push(c)));
+  if(currentUser?.role==='planner') all=all.filter(c=>c.wpId===currentUser.wpId);
   const bdDays=new Set(all.filter(c=>c.dobObj&&c.dobObj.getMonth()===calM).map(c=>c.dobObj.getDate()));
   const fd=new Date(calY,calM,1).getDay(), dim=new Date(calY,calM+1,0).getDate();
   let days='';
@@ -1115,6 +1211,7 @@ function renderBdays() {
   const el=document.getElementById('bdayList');
   const today=new Date();
   let all=[]; WPS.forEach(w=>(clients[w.id]||[]).forEach(c=>all.push(c)));
+  if(currentUser?.role==='planner') all=all.filter(c=>c.wpId===currentUser.wpId);
   const up=all.filter(c=>c.dobObj).map(c=>{
     const nb=nextBday(c.dobObj,today); return {...c,nb,diff:daysBetween(today,nb)};
   }).filter(c=>c.diff>=0&&c.diff<=30).sort((a,b)=>a.diff-b.diff).slice(0,10);
@@ -1461,7 +1558,7 @@ document.querySelectorAll('#taskSubtabs [data-view]').forEach(tab=>{
   });
 });
 
-init();
+checkAuth();
 renderTaskFilters();
 renderTaskStats();
 renderTasksList();
