@@ -31,7 +31,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;font-size:14px;}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);height:100vh;overflow:hidden;font-size:14px;display:flex;}
 
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar{width:4px;height:4px;}
@@ -80,8 +80,39 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
 .nav-tab:hover{color:var(--ink2);}
 .nav-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
 
+/* ── SIDEBAR ── */
+.app-layout{display:flex;width:100%;height:100vh;overflow:hidden;}
+.sidebar{width:230px;flex-shrink:0;background:#080808;border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;height:100vh;overflow-y:auto;}
+.sb-brand{display:flex;align-items:center;gap:12px;padding:22px 18px 16px;}
+.sb-emblem{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold),var(--gold-l));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:15px;font-weight:700;color:#000;flex-shrink:0;box-shadow:0 0 16px rgba(201,168,76,.2);}
+.sb-name{font-family:var(--serif);font-size:14px;color:var(--gold-l);font-weight:600;letter-spacing:.3px;line-height:1.2;}
+.sb-tagline{font-size:8px;color:var(--ink3);letter-spacing:2px;text-transform:uppercase;font-weight:600;margin-top:2px;}
+.sb-divider{height:1px;background:rgba(255,255,255,.05);margin:4px 16px;}
+.sb-section-hdr{padding:12px 18px 5px;font-size:9px;color:var(--ink3);letter-spacing:2px;text-transform:uppercase;font-weight:700;}
+.sb-nav{display:flex;flex-direction:column;gap:1px;padding:4px 10px 8px;}
+.sb-nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background .15s;user-select:none;}
+.sb-nav-item:hover{background:rgba(255,255,255,.04);}
+.sb-nav-item.active{background:rgba(201,168,76,.1);}
+.sb-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;transition:box-shadow .15s;}
+.sb-nav-item.active .sb-dot{box-shadow:0 0 6px currentColor;}
+.sb-label{font-size:13px;color:var(--ink2);font-weight:500;transition:color .15s;}
+.sb-nav-item.active .sb-label{color:var(--ink);font-weight:600;}
+.sb-nav-item:hover .sb-label{color:var(--ink);}
+.sb-team{display:flex;flex-direction:column;gap:1px;padding:4px 10px 4px;}
+.sb-team-item{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:8px;}
+.sb-avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:.5px;}
+.sb-team-name{font-size:12px;color:var(--ink3);}
+
+/* ── MAIN AREA ── */
+.main-area{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.main-hdr{background:var(--c1);border-bottom:1px solid var(--gold-border);padding:0 36px;display:flex;align-items:center;justify-content:space-between;height:62px;flex-shrink:0;position:relative;}
+.main-hdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.35;}
+.mh-left{display:flex;flex-direction:column;gap:1px;}
+.mh-title{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--gold-l);letter-spacing:.3px;}
+.mh-sub{font-size:9px;color:var(--ink3);letter-spacing:2.5px;text-transform:uppercase;font-weight:500;}
+
 /* ── PAGE ── */
-.page{padding:36px 48px;max-width:1520px;margin:0 auto;}
+.page{padding:32px 40px;flex:1;overflow-y:auto;}
 .screen{display:none;animation:fadeIn .3s ease;}
 .screen.active{display:block;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
@@ -634,32 +665,83 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
   </div>
 </div>
 
-<header class="hdr">
-  <div class="hdr-left">
-    <div class="hdr-emblem">Z</div>
-    <div class="hdr-wordmark">
-      <div class="hdr-title">Zion Private Finance</div>
-      <div class="hdr-sub">Wealth Management · Gestão Interna</div>
+<div class="app-layout">
+
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-emblem">Z</div>
+    <div>
+      <div class="sb-name">Zion Private</div>
+      <div class="sb-tagline">Wealth Management</div>
     </div>
   </div>
-  <div class="hdr-right" style="display:flex;align-items:center;gap:0">
+  <div class="sb-divider"></div>
+  <div class="sb-section-hdr">Módulos</div>
+  <nav class="sb-nav">
+    <div class="sb-nav-item active" data-tab="crm">
+      <span class="sb-dot" style="background:#C9A84C"></span>
+      <span class="sb-label">CRM</span>
+    </div>
+    <div class="sb-nav-item" data-tab="treinamentos">
+      <span class="sb-dot" style="background:#3b82f6"></span>
+      <span class="sb-label">Treinamentos</span>
+    </div>
+    <div class="sb-nav-item" data-tab="gestao-comercial">
+      <span class="sb-dot" style="background:#22c55e"></span>
+      <span class="sb-label">Gestão Comercial</span>
+    </div>
+    <div class="sb-nav-item" data-tab="tasks">
+      <span class="sb-dot" style="background:#8b5cf6"></span>
+      <span class="sb-label">Gestor de Tarefas</span>
+    </div>
+    <div class="sb-nav-item" data-tab="marketing">
+      <span class="sb-dot" style="background:#ec4899"></span>
+      <span class="sb-label">Marketing</span>
+    </div>
+    <div class="sb-nav-item" data-tab="admin">
+      <span class="sb-dot" style="background:#14b8a6"></span>
+      <span class="sb-label">Adm. e Financeiro</span>
+    </div>
+  </nav>
+  <div style="flex:1;min-height:20px;"></div>
+  <div class="sb-divider"></div>
+  <div class="sb-section-hdr">Equipe</div>
+  <div class="sb-team">
+    <div class="sb-team-item">
+      <div class="sb-avatar" style="background:#3b82f6">JL</div>
+      <span class="sb-team-name">John Lemos</span>
+    </div>
+    <div class="sb-team-item">
+      <div class="sb-avatar" style="background:#8b5cf6">WM</div>
+      <span class="sb-team-name">Wagner Motta</span>
+    </div>
+    <div class="sb-team-item">
+      <div class="sb-avatar" style="background:#14b8a6">JM</div>
+      <span class="sb-team-name">Jean Michael</span>
+    </div>
+  </div>
+  <div style="height:20px;"></div>
+</aside>
+
+<div class="main-area">
+<header class="main-hdr">
+  <div class="mh-left">
+    <div class="mh-title" id="mhTitle">CRM</div>
+    <div class="mh-sub">Gestão interna · ZPF</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:0">
     <div style="text-align:right">
       <div class="hdr-date" id="hDate"></div>
       <div class="hdr-time" id="hTime"></div>
       <div class="hdr-sync" id="syncStatus"><span class="sync-dot static" id="syncDot"></span><span id="syncTxt">dados locais</span></div>
     </div>
-    <div id="hdrUser" style="display:flex;align-items:center;gap:10px;margin-right:6px;display:none;">
-      <span id="hdrUserName" style="font-size:11px;color:var(--ink2);letter-spacing:1px;font-family:var(--sans);text-transform:uppercase;"></span>
+    <div id="hdrUser" style="display:none;align-items:center;gap:10px;margin-right:6px;">
+      <span id="hdrUserName" style="font-size:11px;color:var(--ink2);letter-spacing:1px;text-transform:uppercase;"></span>
       <button class="hdr-cfg" onclick="doLogout()" title="Sair" style="font-size:12px;">⎋</button>
     </div>
     <button class="hdr-cfg" id="cfgBtn" title="Configurar fonte de dados">⚙</button>
   </div>
 </header>
-
-<nav class="nav">
-  <div class="nav-tab active" data-tab="crm">CRM</div>
-  <div class="nav-tab" data-tab="tasks">Tarefas</div>
-</nav>
 
 <main class="page">
   <div id="loadWrap"></div>
@@ -769,7 +851,29 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:10
     <div id="tasksList"></div>
   </section>
 
+  <!-- TELA: TREINAMENTOS -->
+  <section class="screen" id="screen-treinamentos">
+    <div class="empty" style="padding:100px 0;font-size:13px;letter-spacing:1px;">Em breve — conteúdo de Treinamentos</div>
+  </section>
+
+  <!-- TELA: GESTÃO COMERCIAL -->
+  <section class="screen" id="screen-gestao-comercial">
+    <div class="empty" style="padding:100px 0;font-size:13px;letter-spacing:1px;">Em breve — conteúdo de Gestão Comercial</div>
+  </section>
+
+  <!-- TELA: MARKETING -->
+  <section class="screen" id="screen-marketing">
+    <div class="empty" style="padding:100px 0;font-size:13px;letter-spacing:1px;">Em breve — conteúdo de Marketing</div>
+  </section>
+
+  <!-- TELA: ADMINISTRATIVO E FINANCEIRO -->
+  <section class="screen" id="screen-admin">
+    <div class="empty" style="padding:100px 0;font-size:13px;letter-spacing:1px;">Em breve — conteúdo de Adm. e Financeiro</div>
+  </section>
+
 </main>
+</div><!-- /.main-area -->
+</div><!-- /.app-layout -->
 
 <!-- Settings Modal -->
 <div class="cfg-overlay" id="cfgOverlay">
@@ -868,6 +972,7 @@ let calY = new Date().getFullYear(), calM = new Date().getMonth();
 // ─── AUTH ─────────────────────────────────────────────────
 const USERS = [
   {id:'admin',    name:'Administrador', pass:'zion@2025',    role:'admin',   wpId:null},
+  {id:'wagner',   name:'Wagner Motta',  pass:'wagner@2025',  role:'admin',   wpId:null},
   {id:'breno',    name:'Breno',         pass:'breno123',     role:'planner', wpId:'breno'},
   {id:'edmar',    name:'Edmar',         pass:'edmar123',     role:'planner', wpId:'edmar'},
   {id:'everton',  name:'Éverton',       pass:'everton123',   role:'planner', wpId:'everton'},
@@ -1607,15 +1712,29 @@ function switchCrmSub(sub){
   if(sub==='gestao') initPipeline();
 }
 
-document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>{
-  document.querySelectorAll('.nav-tab,.screen').forEach(x=>x.classList.remove('active'));
-  t.classList.add('active');
-  document.getElementById(`screen-${t.dataset.tab}`).classList.add('active');
-  if(t.dataset.tab==='tasks'){ renderTaskStats(); renderTasksList(); }
-  if(t.dataset.tab==='crm'){
-    const sub=document.querySelector('.crm-subtab.active')?.dataset.sub;
-    if(sub==='gestao') renderClients();
+const TAB_LABELS = {
+  'crm':'CRM','treinamentos':'Treinamentos','gestao-comercial':'Gestão Comercial',
+  'tasks':'Gestor de Tarefas','marketing':'Marketing','admin':'Adm. e Financeiro'
+};
+
+function switchTab(tab) {
+  document.querySelectorAll('.sb-nav-item').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+  const item = document.querySelector(`.sb-nav-item[data-tab="${tab}"]`);
+  if (item) item.classList.add('active');
+  const screen = document.getElementById(`screen-${tab}`);
+  if (screen) screen.classList.add('active');
+  const titleEl = document.getElementById('mhTitle');
+  if (titleEl) titleEl.textContent = TAB_LABELS[tab] || tab;
+  if (tab==='tasks') { renderTaskFilters(); renderTaskStats(); renderTasksList(); }
+  if (tab==='crm') {
+    const sub = document.querySelector('.crm-subtab.active')?.dataset.sub;
+    if (sub==='gestao') initPipeline();
   }
+}
+
+document.querySelectorAll('.sb-nav-item').forEach(t=>t.addEventListener('click',()=>{
+  switchTab(t.dataset.tab);
 }));
 
 document.getElementById('searchIn').addEventListener('input',e=>{searchQ=e.target.value;renderClients();});
